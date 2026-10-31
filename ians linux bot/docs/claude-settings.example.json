@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Read",
-      "Edit(**/bots/**)",
+      "Edit(**/bots/*/src/**/*.py)",
+      "Edit(**/bots/*/*.md)",
       "Edit(**/results/**)",
       "Edit(**/HANDOFF.md)",
       "Bash(python3 -I tools/eval.py *)",
@@ -50,12 +51,25 @@
       "Bash(./cli/cambc login*)",
       "Bash(cambc login*)",
       "Bash(./cli/cambc match-groups create*)",
-      "Bash(cambc match-groups create*)"
+      "Bash(cambc match-groups create*)",
+      "Edit(**/bots/**/CMakeLists.txt)",
+      "Edit(**/bots/**/*.cmake)",
+      "Edit(**/bots/**/build.rs)",
+      "Edit(**/bots/**/Cargo.toml)",
+      "Edit(**/bots/**/.cargo/**)",
+      "Edit(**/bots/**/dune*)",
+      "Edit(**/cmake/**)",
+      "Edit(**/sdk/**)",
+      "Edit(**/cambc.toml)"
     ]
   },
   "sandbox": {
     "network": {
-      "allowedDomains": ["github.com", "2026a.battlecode.co.uk"]
-    }
+      "allowedDomains": [
+        "github.com",
+        "2026a.battlecode.co.uk"
+      ]
+    },
+    "enabled": true
   }
 }
