@@ -1,11 +1,17 @@
 # Loop status (updated every tick)
 
-- **Last tick:** 2026-10-31 18:48 EDT (manual).
-- **Champion:** `tb_merge_b` (Python). Website v2 is **Active / Verified**; v1 is retired.
-- **Ladder:** v2 is 13W-2L in its first 3 sets. Rating 1,407 → 1,442 (22:10 UTC).
-- **Next lock:** Sprint 3, Sat 31 Oct 23:59 GMT (19:59 EDT). After that: International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov. Check /game/tournaments for exact lock times.
-- **Done:** the ladder-learning batch (T11-T14). Report: `results/experiments/2026-10-31-ladder-learning.md`. No change to the champion.
-- **Running:** the C++ port workflow (Q11).
-- **Blocked:** Q14 (the real replays of the losses to "test"). The site's bundle downloads keep failing under pre-deadline load. Retry after the lock, or with the CLI once someone runs `cambc login`.
-- **Next:** strategy batch Q12 (early fights), Q13 (fuel in fights), Q15 (anti-stun channel rule) and Q2 (gold-tiebreak play), launched by the next tick. Sprint 3 freeze window is 18:59–19:59 EDT: no uploads.
-- **Soak runner:** stopped per the user's rule (no simulation without a strategy hypothesis).
+- **Last tick:** 2026-10-31 18:50 EDT.
+- **Champion:** `tb_merge_b` (Python), website v2, **Active / Verified**.
+- **Ladder:** v2 is **24W-6L** over 6 sets (5-0, 5-0, 3-2, 4-1, 4-1, 3-2). Rating 1,407 → **1,465**.
+  - By team size: 3-pick 3/6, 4-pick 10/11, 5-pick 11/13. **3-pick is the weak spot.**
+  - Losses:
+    - 02arena and adgato_gemcombat4 vs "test";
+    - 00galaxy and 00swirl vs C-- (Vesper, Tavi, Marcella, Willow, Vendetta);
+    - 01broken_curve vs Blame the Altar (3-pick);
+    - 02the_pack 0-0, lost on the gold tiebreak (3-pick).
+  - Log: `results/ladder-games.jsonl` (95 games).
+- **Next lock:** Sprint 3, 19:59 EDT. **Upload freeze is active (18:59–19:59).** After that: International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov.
+- **Running:**
+  - strategy batch 1 (`wt89dw4p0`): h_3pick (Q18), h_goldtie (Q2), h_earlyfight (Q12), h_antistun (Q15), h_fightfuel (Q13). Each gets a test plus an independent analysis and a report in `results/experiments/`.
+  - C++ port track (Q11).
+- **Blocked:** Q14 (the real replays of the losses to "test"). Bundle downloads fail under site load; retry after the lock, or use the CLI once `cambc login` is done.
