@@ -2,6 +2,8 @@
 
 **Rule (user, 31 Oct):** every simulated match must test a **new, meaningful, distinct strategy** with improvement potential, drawn from ladder research, our own bots or postmortems. No simulation for its own sake. Submissions = the strongest bot found.
 
+**Methodology note (31 Oct):** local games are **deterministic**: the same bots on the same map give byte-identical results. Never re-run a map; get more evidence by covering more maps (`--maps all` = 140 games). A 40-game sprint eval has about ±8% map-sampling noise.
+
 **Test protocol:**
 1. Implement the strategy in its own candidate bot (`tools/newbot.py <champion> <cand>`).
 2. Screen it with `tools/eval.py <cand> <champion> --maps quick`. Where relevant, also test against imitation opponents of the real ladder comps that beat us.
@@ -23,7 +25,10 @@ Champion: see `results/CHAMPION`.
 | T8 | Item-13 score multipliers (gold decay, enemy-half ×0.4) | Census §2.7 | lost 14-26 | rejected |
 | T9 | Travel dash (Vesper/Vendetta) | Own idea | 67% vs 75% without | rejected |
 | T10 | Literal census banking without fight model | Census §2.3 | lost 9-15 | rejected (only works with T2) |
-| T11 | Ladder-common drafts (Varg/C&I/Stellar/Tavi) vs our meta draft | Ladder 31 Oct | testing (ladder-learning workflow) | — |
+| T11 | Ladder-common drafts with our logic: lad_vcst (Varg/C&I/Stellar/Tavi/Ren), lad_svrc, lad_hyb | Ladder 31 Oct | tb_merge_b won 68% / 80% / 60%, and 11-1 on the ladder-loss maps | rejected (draft isn't why we lose) |
+| T12 | Varg replaces HoR at pick 4 (lad_varg4) | Ladder (Varg = top farmer) | 39W-41L (49%) over 80 games | inconclusive / neutral |
+| T13 | Count enemy shield as HP in the kill-time model (tb_v3_cand) | Repro of the losses to "test" | 20W-20L vs champion; 80% vs imit_test (champion 85%) | rejected |
+| T14 | Weight Stellar/Cassi burst higher in enemy_dps (tb_v3_burst) | Repro of the losses to "test" | 82% vs imit_test (champion 85%) | rejected |
 
 ## Queue (highest expected value first; refine with each ladder pull)
 | # | Strategy hypothesis | Source | Why it might win |
@@ -40,4 +45,9 @@ Champion: see `results/CHAMPION`.
 | Q10 | **Heavier TP-crystal use** on large or disconnected maps | Census crystal stats (01starvation 531, big_world 325) | Faster rotations on big maps |
 | Q12 | **Win the early fights**: in 00dunes-type losses we died 6 times to champions before round 300, while their Vendetta/Vesper went 9-0/8-0. Avoid isolated early farming near the enemy, or group the first 300 rounds | analyze_match on the 70-map loss set | Losses start with an early gem deficit (−22 at r500) |
 | Q13 | **Fuel budgeting in fights**: losses average 183 fuel exhaustions vs 69 in wins. Cap fight/retreat computation and pre-compute threat maps | analyze_match --summary (70-map run) | Suspended turns in fights = lost fights |
+| Q14 | **Study team "test"'s real replays** (gemcombat4 `8c4e94e4-7f23-4397-ab51-52b0dbe993df`, 02arena `e73b0c3e-8bb6-4477-8203-703f51191555`): who killed us when, were tributes/recalls stunned. Needs a bundle download (browser or `cambc login`) | ladder-learning | Their play, not their draft, beat us; imitations can't reproduce it |
+| Q15 | **Anti-stun channel rule**: don't start a tribute/recall with an enemy caster (Cassi/Stellar/Ren/Ryth) visible within ~5 | ladder-stats | Stuns cancel tribute/recall; test drafts many stuns |
+| Q16 | **Varg with a Bruiser plan**, then retest lad_varg4 on all 70 maps | draft-imitation | Varg out-farms HoR by ~55 gems/game, but the swap was neutral (Varg had no item plan) |
+| Q17 | **Cassi&Issac linked-fate logic** (keep both alive, kite together) | draft-imitation | Imitations' C&I died 6.5-7.5×/game; needed only if we draft them |
+| Q18 | **3-pick draft with a stun anchor** (e.g. Vesper, Vendetta, Ryth) on 3-pick maps only | ladder-stats (02arena loss) | v2 is 0-1 on 3-pick maps, so untested |
 | Q11 | **C++ port** (parallel track, user request) | User | Only if it beats the Python champion |
