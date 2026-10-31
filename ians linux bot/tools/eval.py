@@ -17,11 +17,15 @@ Exit summary line starts with "SUMMARY" so callers can grep it.
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Prefer the workspace binary; fall back to a cambc on PATH (e.g. `pip install cambc` on a cluster).
 CAMBC = os.path.join(ROOT, "cli", "cambc")
+if not os.path.exists(CAMBC):
+    CAMBC = os.environ.get("CAMBC") or shutil.which("cambc") or CAMBC
 
 QUICK = [
     "00anvil", "00gemfight", "01islands", "02arena", "00monolith", "01elk-arena",

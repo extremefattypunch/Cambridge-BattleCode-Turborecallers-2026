@@ -1,0 +1,76 @@
+# Handoff: Turbo Recallers Python bot (cambc 2026a)
+
+_Last updated: 2026-10-31, Sprint 3 day (lock 23:59 GMT = 19:59 EDT). Written for the next Claude agent, e.g. one running overnight improvement loops on a cluster._
+
+## 1. Where things stand
+- **Live submission:** see §3. The current champion bot is named in `results/CHAMPION`.
+- **Upcoming events** (check https://2026a.battlecode.co.uk/game/tournaments for exact lock times): International qualifiers on 4 Nov, UK qualifiers on 11 Nov, in-person finals on 18 Nov at the Cambridge Union. All sprints and tournaments use **unseen maps**.
+- **Ladder context** on 31 Oct: 815 ranked teams. The top 10 are almost all C++, rated about 2,300–2,650.
+- **Our bot lineage:**
+  1. `starter-python`, the official starter. It dies about 28–35 times per game.
+  2. Builder round: four independent designs. NOTES.md in each bot dir explains its design and lists hard-won engine facts. Results on 20 sprint maps × both sides vs starter-python:
+
+     | bot | result | avg gems | avg deaths |
+     |---|---|---|---|
+     | `tb_deathball`: team ball / two squads, leader picks the target via shared memory | 40-0 | 901 vs 144 | 3.7 |
+     | `tb_splitfarm`: parallel farming, per-champion claims, TP-crystal island crossing | 40-0 | 878 vs 152 | 3.3 |
+     | `tb_economy`: draft, items and ability focus | 38-2 | 879 vs 173 | 12.7 |
+     | `tb_aggro`: farming plus punishing enemies | 37-3 | 744 vs 185 | 2.4 |
+
+  3. `sf_base` is a frozen copy of `tb_splitfarm`, the baseline for the improvement round.
+  4. Improvement round: five agents each patched a copy of `sf_base` (`sf_fuel`, `sf_bank`, `sf_draft`, `sf_pvp`, `sf_maps`). Patches are in `matches/patches/` (gitignored) and also in each bot's CHANGES.md. See §4.
+  5. Merged result: see §4.
+
+## 2. Round-robin among the builder bots (sprint maps, 40 games per pair)
+```
+(filled in below when finished)
+```
+
+## 3. Submissions (website version history)
+| Version | Bot | Note | When |
+|---|---|---|---|
+| v1 | tb_splitfarm (= sf_base) | interim; split-map farmer with TP crystal crossing | 31 Oct 19:31 UTC |
+
+## 4. Improvement round and merge
+(filled in when finished)
+
+## 5. Known weaknesses and next steps (prioritised)
+Based on `postmortems/INSIGHTS.md` §4 and our own metrics. Strike items off as they land in the champion.
+1. **Fuel exhaustion:** about 300 suspended turns per game in sf_base, worst on 100×100 maps. Cache static DistanceFields, add fuel guards, and move map analysis into the draft (250M fuel; only the 1,024-byte draft memory carries over to champions).
+2. **Banking:** top-20 teams tribute 32–56 gems per trip; sf_base averages 19. Use the census rule (bank ≥30 anywhere, ≥15 near an altar, ≥5 adjacent; halve when threatened; always bank at round ≥1900 or when banked + carried ≥ 1000).
+3. **Meta draft:** all 20 top teams play Heart of Ruin + Marcella + Vendetta + Vesper Vale (+ Ryth or Tavi). Pair it with correct kit usage: HoR's landing-dash stun, Marcella's enhanced reset only after a basic attack.
+4. **Items:** Bruiser shards on the main stat (the top teams' habit; 7 shard-points per 150 gold). We open with Jungle and Monster.
+5. **PvP:** focus channelling enemies and gem carriers (a stun cancels tribute, recall and teleport). Use altar locks (10 g; placing one cancels enemy tributes at that altar). Place wards whenever the charge is up (all top-20 teams do).
+6. **Map archetypes**, detected in the draft from map *contents*:
+   - Monolith-gated altars (02guardians and 01boss-battle score 0–0 today).
+   - Huge elk herds (00stampede).
+   - Jackpot groups (00the-line, 00vault).
+   - Disconnected islands (handled via TP crystals).
+7. **Test against stronger, different opponents.** Self-play and starter-only testing hide weaknesses. Download real top-team replays from `/game/match-database` (huge, 15 GB a day) or ladder matches (`cambc matches` after `cambc login`) to study how top teams play.
+
+## 6. Overnight improvement protocol (suggested)
+The machine budget decides scale: one 2000-round Python game uses about 1.5–2 cores for 10–20 s, so `--jobs` ≈ cores/2.
+1. `CHAMP=$(cat results/CHAMPION)`. Copy it to a new bot: `cp -r bots/$CHAMP bots/<cand> && rm -rf bots/<cand>/.cambc`.
+2. Make **one** focused change, taken from §5 or from replay or metric analysis:
+   - `python3 tools/eval.py <cand> $CHAMP --maps quick --keep --tag dbg`
+   - Then read the replay zip's `team-a.stdout`, and use `postmortems/match_metrics.py matches/dbg`. Death events name the killer.
+3. Screen: run `tools/eval.py <cand> $CHAMP --maps quick` (24 games). Drop the change if it scores under 50%.
+4. Confirm: run `tools/eval.py <cand> $CHAMP --maps sprint`. Accept at ≥ 55% with `botFaults 0`. For anything touching movement or draft, also run `--maps all` (140 games).
+5. Gauntlet: `python3 tools/gauntlet.py <cand> --maps sprint` (logs to `results/gauntlet.jsonl`). It must not regress against the rest of the pool.
+6. Promote: write the bot name to `results/CHAMPION`, add a line to §3/§4 of this file, then commit and push to `ians-linux-bot`.
+7. Every few hours run `./cli/cambc maps pull`. New maps resemble upcoming unseen maps, so add them to the eval set.
+8. **Do not submit to the platform without the user's go-ahead** (it changes the team's live bot). Bundle with `./cli/cambc bundle <bot> --output submissions/<bot>.zip` and leave it ready.
+
+## 7. Engine / API facts that bit us (details in the bots' NOTES.md and the skills)
+- **Spawn tiles:** standing on a spawn tile of a respawning camp group blocks its respawn forever. Never idle on camp spawn tiles unless capturing.
+- **Group state:** `CampGroup.state()` can say Alive while none of its camps are visible. A group stays Alive until *every* member is dead; path to the live camps, not to a dead member's tile.
+- **Bushes:** camps in bushes are invisible from outside, and moving onto a hidden occupant returns False every turn without raising (infinite loop risk).
+- **Recall:** damage cancels a recall. Step out of every awake camp's range (3/4/4/5) before recalling. Camps don't chase, don't regenerate while asleep, and go back to sleep after 2 rounds with no champion in range.
+- **Pathing:** `vision.champion_tiles()` includes allies, so treating allies as walls deadlocks corridors. `DistanceField.get()` returns 65535 for unreached tiles; use the `visited` bitboard for reachability.
+- **Attack resets** raise until you have basic-attacked this turn.
+- **`move_towards(t)`** raises when `t` is occupied and you are adjacent.
+- **Shared caches:** never mutate cached boards (`walls()`, `altars()`, `spawn_region()`, `spawn_tiles()`).
+- **Draft memory** is 1,024 zero-padded bytes; Python state from the draft does not reach champions. Shared memory is 8 bytes for the whole team for the whole match.
+- **Fuel budget:** 250M on the first draft turn, 5M on the first play turn, then 2.5M per turn for Python.
+- **Bot output:** `print` output exists only inside the replay zip (`team-a.stdout`). `cambc run` does not show it.
+- **Tiebreak:** results vary between runs (the engine seed changes), and an exact tie goes to Team B.
