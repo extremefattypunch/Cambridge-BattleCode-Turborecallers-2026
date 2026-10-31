@@ -53,7 +53,22 @@ Conclusion: tb_splitfarm (64%) was chosen as the improvement base. tb_aggro (62%
 | v1 | tb_splitfarm (= sf_base) | interim; split-map farmer with TP crystal crossing | 31 Oct 19:31 UTC |
 
 ## 4. Improvement round and merge
-(filled in when finished)
+Five agents each patched a copy of `sf_base` (`tb_splitfarm`) along one dimension. Each bot dir has CHANGES.md with per-change measurements; the patches (gitignored) are in `matches/patches/`. Results vs sf_base on sprint maps (40 games):
+
+| Bot | vs sf_base | Cross-checks (quick, 24 games) | What it adds |
+|---|---|---|---|
+| `sf_bank` | **33W-7L (82%)** | 79% vs tb_aggro, 88% vs tb_economy | **Kill-time fight/flee model** (champion deaths 24 → 4 per game), detour-aware census banking, camp-escape safety, stall breaker, chase guard |
+| `sf_pvp` | **31W-9L (78%)** | 92% vs tb_aggro, 92% vs tb_economy | Focus on channelling enemies and gem carriers, shared focus target in shared-memory byte 7, stuns to break channels, reactive and proactive altar locks, avoiding locked altars, wards |
+| `sf_draft` | 29W-11L (72%) | 88% vs tb_economy | Meta draft (Vesper, Vendetta, Marcella, HoR, Ryth), Bruiser item builds, HoR landing-dash aim, AoE aim, re-target after attack reset |
+| `sf_fuel` | 24W-16L (60%) | 83% vs tb_economy | Static distance-field cache, pruned exact target scoring, fuel guards. fuelExhausted down from 180 to 6.5 per game |
+| `sf_maps` | 21W-19L (52%), neutral | — | Map-archetype profile in draft memory (jackpot / gated / herd). Not merged; ideas kept for later |
+
+Lessons from the round:
+- Literal census banking alone *lost* (9-15). Banking only helped once fights were won.
+- The single capture recipient and the item-13 scoring multipliers both lost and are shipped OFF.
+- A "travel dash" lost (dash on cooldown when enemies appear).
+
+**v2 (sf_bank)**, live once uploaded, see §3. **Merge round:** three independent merges (`tb_merge_a`: bank→pvp→draft→fuel; `tb_merge_b`: pvp→bank→draft→fuel; `tb_merge_c`: bank→draft→fuel), each validated against `sf_bank`. Results below.
 
 ## 5. Known weaknesses and next steps (prioritised)
 Based on `postmortems/INSIGHTS.md` §4 and our own metrics. Strike items off as they land in the champion.
