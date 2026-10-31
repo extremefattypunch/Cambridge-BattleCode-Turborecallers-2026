@@ -16,20 +16,32 @@ A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**
    - Run `date`.
    - Read the next tournament lock from https://2026a.battlecode.co.uk/game/tournaments.
    - Record it in STATUS.md.
-2. **Ladder research** (no local simulation needed).
+2. **Ladder research** (real games are analysed too).
    - In the logged-in Chrome tab, fetch `/api/v1/match-groups?scope=team`, then `/api/v1/match-groups/<id>` for any new groups.
    - Append the new games to `results/ladder-games.jsonl`, deduplicated by match id. Each line holds: version, opponent, opponent rating, map, side, result, scores, rounds, end reason, both drafts.
    - Record the rating in STATUS.md.
    - Turn each **new** loss pattern into a strategy hypothesis in STRATEGIES.md (opponent comp, map type, how they won).
    - Format JS output with `|` separators (outputs that look like query strings are blocked).
    - Replay bundles (`/api/v1/matches/<id>/bundle`) are async: poll `pollUrl`. Download them only for losses we want to study.
-3. **Strategy experiments.** If fewer than about 2 experiment workflows are running:
-   - Take the top untested items from the STRATEGIES.md queue.
-   - Launch a workflow that implements **each strategy in its own candidate bot**. Use `tools/newbot.py <champion> <cand>`; never edit the champion.
-   - Test each candidate against the champion, and against imitation opponents of real ladder comps when the hypothesis targets them (e.g. `imit_test`, `lad_*`: our bot with a ladder-common draft).
-   - Record each verdict (kept / rejected / inconclusive, with the eval lines) in STRATEGIES.md.
-   - Never re-run a rejected idea unchanged.
-   - Combine compatible winners in a follow-up merge experiment.
+3. **Strategy experiments: hypothesis → test → detailed analysis → new hypotheses.** This is the core learning process. If fewer than about 2 experiment workflows are running, take the top untested items from the STRATEGIES.md queue and launch a workflow in which every strategy goes through all four stages:
+   - **(a) Implement** the strategy in its own candidate bot (`tools/newbot.py <champion> <cand>`; never edit the champion).
+   - **(b) Test** it against the champion, and against imitation opponents of real ladder comps when the hypothesis targets them (e.g. `imit_test`, `lad_*`). Use `tools/eval.py ... --keep`.
+   - **(c) Analysis session (mandatory, for every experiment).**
+     - Run `python3 -I tools/analyze_match.py --summary matches/<tag> --games`, which contrasts wins and losses: gem race, opening tempo, K/D, damage, gold, fuel.
+     - Read full per-game narratives (`tools/analyze_match.py matches/<tag>/<map>__A.json`) for every loss and any surprising win: deaths with killer and location, per-champion lines, tribute habits.
+     - Read bot stdout from the kept replay zips (`team-a.stdout`) when decisions need explaining.
+     - Answer: did the mechanism we targeted actually change, and why did the remaining losses happen?
+   - **(d) Write** `results/experiments/<YYYY-MM-DD>-<cand>.md` from the template, covering:
+     - the hypothesis and its source;
+     - the setup;
+     - the eval lines;
+     - the analysis findings, with evidence;
+     - the verdict (kept / rejected / inconclusive);
+     - the **new hypotheses** the analysis suggests.
+
+     Then add those hypotheses to the STRATEGIES.md queue, record the verdict there, and never re-run a rejected idea unchanged. Combine compatible winners in a follow-up merge experiment.
+
+   **No match is run without a hypothesis, and no experiment ends without an analysis session and a written report.**
 4. **Promotion gate.** A candidate replaces the champion only if all of these hold:
    - `tools/eval.py <cand> <champion> --maps sprint`: **≥ 55%** and **botFaults 0**;
    - `tools/gauntlet.py <cand> --maps sprint`: no regression against the rest of the pool;

@@ -38,4 +38,6 @@ Champion: see `results/CHAMPION`.
 | Q8 | **Ward intel sharing**: put enemy sightings in shared byte 6 and feed them into fight and banking decisions | INSIGHTS §3 (comms lessons) | Allies avoid ambushes and join fights |
 | Q9 | **Danger as path cost, not walls**: hazard memory as soft costs (tb_aggro idea) | GST / Pantheon postmortems | Fewer detours and stalls |
 | Q10 | **Heavier TP-crystal use** on large or disconnected maps | Census crystal stats (01starvation 531, big_world 325) | Faster rotations on big maps |
+| Q12 | **Win the early fights**: in 00dunes-type losses we died 6 times to champions before round 300, while their Vendetta/Vesper went 9-0/8-0. Avoid isolated early farming near the enemy, or group the first 300 rounds | analyze_match on the 70-map loss set | Losses start with an early gem deficit (−22 at r500) |
+| Q13 | **Fuel budgeting in fights**: losses average 183 fuel exhaustions vs 69 in wins. Cap fight/retreat computation and pre-compute threat maps | analyze_match --summary (70-map run) | Suspended turns in fights = lost fights |
 | Q11 | **C++ port** (parallel track, user request) | User | Only if it beats the Python champion |
