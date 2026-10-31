@@ -70,6 +70,16 @@ Lessons from the round:
 
 **v2 (sf_bank)**, live once uploaded, see §3. **Merge round:** three independent merges (`tb_merge_a`: bank→pvp→draft→fuel; `tb_merge_b`: pvp→bank→draft→fuel; `tb_merge_c`: bank→draft→fuel), each validated against `sf_bank`. Results below.
 
+### Merge results (31 Oct, ~17:30 EDT)
+| Merge | Patches | vs sf_bank (sprint, 40) | vs tb_aggro (quick) | fuelExhausted/game |
+|---|---|---|---|---|
+| `tb_merge_a` | bank→pvp→draft→fuel, plus a FUEL_KEEP_TARGET guard | 37W-3L (92%) | 24W-0L | 67 |
+| **`tb_merge_b`** | pvp→bank→draft→fuel, plus a fix for the stun-target-left-vision crash | **37W-3L (92%)** | **24W-0L** (also 23W-1L vs tb_economy) | 77 |
+| `tb_merge_c` | bank→draft→fuel, no pvp, plus a custom draft order | 30W-10L (75%) | 22W-2L | 27 |
+
+Round-robin among the merges (`results/roundrobin-merges-2026-10-31.txt`): **tb_merge_b 68%**, tb_merge_a 64%, tb_merge_c 19%. tb_merge_a vs tb_merge_b went 20-20.
+**tb_merge_b was chosen as the final Sprint 3 bot.** Its NOTES.md explains how each conflict was resolved: sf_bank's kill-time model decides fights, and sf_pvp's focus and channel bias is layered on top.
+
 ## 5. Known weaknesses and next steps (prioritised)
 Based on `postmortems/INSIGHTS.md` §4 and our own metrics. Strike items off as they land in the champion.
 1. **Fuel exhaustion:** about 300 suspended turns per game in sf_base, worst on 100×100 maps. Cache static DistanceFields, add fuel guards, and move map analysis into the draft (250M fuel; only the 1,024-byte draft memory carries over to champions).

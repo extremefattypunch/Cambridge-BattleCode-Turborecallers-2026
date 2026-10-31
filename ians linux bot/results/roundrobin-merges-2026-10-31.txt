@@ -1,0 +1,14 @@
+SUMMARY tb_merge_a vs tb_merge_b: 20W-20L (50%)  avg gems 693 vs 648
+SUMMARY tb_merge_a vs tb_merge_c: 31W-9L (78%)  avg gems 812 vs 344
+SUMMARY tb_merge_b vs tb_merge_c: 34W-6L (85%)  avg gems 836 vs 281
+
+win% (row vs column)
+             tb_merge_a tb_merge_b tb_merge_c
+tb_merge_a            -        50%        78%
+tb_merge_b          50%          -        85%
+tb_merge_c          22%        15%          -
+
+RANKING
+  tb_merge_b     54/80   wins (68%)  avg gems 742
+  tb_merge_a     51/80   wins (64%)  avg gems 752
+  tb_merge_c     15/80   wins (19%)  avg gems 312
