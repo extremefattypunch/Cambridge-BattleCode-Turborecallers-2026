@@ -6,6 +6,9 @@ _Last updated: 2026-10-31 ~17:45 EDT, after the Sprint 3 submission (lock 23:59 
 - **Live submission:** `tb_merge_b` (website v2) is selected for Sprint 3; see §3. The current champion bot is named in `results/CHAMPION` (= `tb_merge_b`).
 - **Upcoming events** (check https://2026a.battlecode.co.uk/game/tournaments for exact lock times): International qualifiers on 4 Nov, UK qualifiers on 11 Nov, in-person finals on 18 Nov at the Cambridge Union. All sprints and tournaments use **unseen maps**.
 - **Ladder context** on 31 Oct: 815 ranked teams. The top 10 are almost all C++, rated about 2,300–2,650.
+- **Reality check from the real ladder:** v1 (`tb_splitfarm`) went from 1,500 to **1,410** over its first 13 ranked match sets on 31 Oct. It won **3 sets and lost 10**, with five 0–5 losses against teams rated about 1,400–1,500 (FürFortnite, LigaSiur, Hammer Method, Patient Wolves, mostly harmless).
+  - It beat the starter 100% locally, so **our local self-play numbers overstate real strength a lot.**
+  - `tb_merge_b` (v2) beats v1 92% locally, but its real ladder performance is unknown as of this writing. Check `/game/matches` or `cambc matches`.
 - **Our bot lineage:**
   1. `starter-python`, the official starter. It dies about 28–35 times per game.
   2. Builder round: four independent designs. NOTES.md in each bot dir explains its design and lists hard-won engine facts. Results on 20 sprint maps × both sides vs starter-python:
@@ -86,6 +89,11 @@ Round-robin among the merges (`results/roundrobin-merges-2026-10-31.txt`): **tb_
 
 ## 5. Known weaknesses and next steps (prioritised)
 Postmortem items 1–5 (fuel, banking, meta draft, Bruiser items, PvP focus/locks/wards) are now **in `tb_merge_b`**. What remains, roughly by expected value:
+0. **Learn from real ladder losses first.** This is the biggest blind spot (see §1).
+   - Download our ranked matches with `cambc matches` (after `cambc login`), or the replay ZIPs from the site.
+   - Run `./cli/cambc summary <file>` / `--statistics` for JSON. The `events` include death killers, gemLoss and gemSubmission.
+   - Compare drafts, gem curves, deaths and kills against the teams that beat us 0–5.
+   - Consider building local "imitation" opponents of the strategies that beat us. A local pool made only of our own bots can't reveal these weaknesses.
 1. **0–0 maps lost on the tiebreak.** Five of the 15 losses on the 70-map check were 0–0 at round 2000: 01boss-battle, 02guardians, 02gift-wrapping, 02the-pack, 01yellow-brick-road. The tiebreak is **lifetime gold earned, then kills, then Team B**.
    - Detect "no gems reachable or safe" early, then deliberately maximise gold (gold clusters, kills, Vesper's +33% gold).
    - Or crack the gate as a team. `sf_maps` has gate/herd detection code (`src/mapprofile.py`) and a partly working gated-altar assault (02guardians side A won 4 out of 4 in isolation).
