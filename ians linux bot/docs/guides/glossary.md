@@ -1,0 +1,41 @@
+<!-- source: https://2026a.battlecode.co.uk/game/docs/glossary -->
+Handbook/Reference
+
+# Glossary
+
+2 min read · Current game rules
+
+On this page
+
+Common terms
+
+## Common terms#
+
+| Term | Meaning |
+| --- | --- |
+| Altar | A map objective where carried gems become team score. |
+| Attack | A champion’s ordinary attack, distinct from its spells. |
+| Bot | The program making your team’s decisions. |
+| Camp group | Monsters whose shared reward is claimed after they are all defeated. |
+| Capture region | A camp’s spawn tiles; hold them uncontested to claim its reward. |
+| Channel | An action that counts down at the end of your turns, including the turn it begins. |
+| Cooldown | The remaining wait before an ability can be used again. |
+| Draft | The opening stage in which teams pick their champions. |
+| Draft memory | 1,024 bytes your draft code writes and every champion reads during the match. |
+| Emblem | Equipment formed automatically from five identical shards. |
+| Focus | The stat that scales spells. The SDK calls it focus . |
+| Fuel | The runner’s measure of computation spent by a bot. |
+| Growth | The Strength , Health  or Focus  a champion gains from each matching shard. |
+| Passive | An effect that works without casting an ability. |
+| Recall | A channel that returns a champion to its spawn. |
+| Round | A world update followed by the champions’ execution slots. |
+| Shard | A 30-gold piece of equipment that adds the champion’s growth in one stat. |
+| Shared memory | 8 bytes all of a team’s champions read and write throughout the match. |
+| Strength | The stat that sets basic strength . The SDK calls it strength . |
+| Stun | A temporary effect that prevents actions and interrupts channels. |
+| Health | Your maximum health . The SDK calls it max_health, starting from base_health. |
+| Tribute | A channel beside an altar that turns your carried gems into team score. |
+| Turn | One champion’s opportunity to observe and act. |
+| Ward | A placed source of vision and a way to scout crystal destinations. |
+
+← PreviousAgents.md←→ turn pages
