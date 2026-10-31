@@ -20,9 +20,10 @@ Team repo for Cambridge Battlecode 2026a ("cambc", https://2026a.battlecode.co.u
 | `docs/` | Official GameRules.md, BotAPI*.md and handbook guides |
 | `maps/` | Local map pool (70 maps). Sprints use **unseen** maps, so never special-case map names |
 | `cli/cambc` | CLI binary, **gitignored** (99 MB). On a new machine see Setup |
+| `docs/CLI_ONLY.md` | CLI equivalents of site tasks (login, submit, match-groups) for agents without a browser |
 | `matches/`, `replays/`, `.cambc/` | Generated output, gitignored |
 
-## Setup on a new machine (e.g. a cluster)
+## Setup on a new machine
 ```bash
 cd "ians linux bot"
 curl -L -o cli/cambc https://2026a.battlecode.co.uk/api/v1/distribution/linux-x64/download && chmod +x cli/cambc

@@ -70,7 +70,7 @@ Based on `postmortems/INSIGHTS.md` §4 and our own metrics. Strike items off as 
 7. **Test against stronger, different opponents.** Self-play and starter-only testing hide weaknesses. Download real top-team replays from `/game/match-database` (huge, 15 GB a day) or ladder matches (`cambc matches` after `cambc login`) to study how top teams play.
 
 ## 6. Overnight improvement protocol (suggested)
-The machine budget decides scale: one 2000-round Python game uses about 1.5–2 cores for 10–20 s, so `--jobs` ≈ cores/2.
+For reference, one 2000-round Python game took about 10–20 s of wall time on the 16-core dev PC (24-game eval with `--jobs 6` ≈ 50 s). Use `docs/CLI_ONLY.md` for the browser-free equivalents of site tasks.
 1. `CHAMP=$(cat results/CHAMPION)`. Copy it to a new bot: `cp -r bots/$CHAMP bots/<cand> && rm -rf bots/<cand>/.cambc`.
 2. Make **one** focused change, taken from §5 or from replay or metric analysis:
    - `python3 tools/eval.py <cand> $CHAMP --maps quick --keep --tag dbg`
