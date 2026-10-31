@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read",
+      "Bash(python3 tools/*)",
+      "Bash(python3 -I tools/*)",
+      "Bash(python3 postmortems/match_metrics.py *)",
+      "Bash(python3 -I postmortems/match_metrics.py *)",
+      "Bash(./cli/cambc run *)",
+      "Bash(./cli/cambc run-batch *)",
+      "Bash(./cli/cambc build *)",
+      "Bash(./cli/cambc bundle *)",
+      "Bash(./cli/cambc summary *)",
+      "Bash(./cli/cambc maps *)",
+      "Bash(./cli/cambc matches *)",
+      "Bash(./cli/cambc match-groups *)",
+      "Bash(./cli/cambc ladder*)",
+      "Bash(./cli/cambc --version)",
+      "Bash(cambc run *)",
+      "Bash(cambc run-batch *)",
+      "Bash(cambc bundle *)",
+      "Bash(cambc maps *)",
+      "Bash(cambc matches *)",
+      "Bash(cambc match-groups *)",
+      "Bash(cambc ladder*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git pull --rebase*)",
+      "Bash(git push)",
+      "Bash(git push origin ians-linux-bot)",
+      "Bash(cp -r bots/*)",
+      "Bash(rm -rf bots/*/.cambc)",
+      "Bash(diff *)",
+      "Bash(ls*)",
+      "Bash(date*)",
+      "Bash(nproc)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(./cli/cambc submit*)",
+      "Bash(cambc submit*)",
+      "Bash(./cli/cambc submissions*)",
+      "Bash(cambc submissions*)",
+      "Bash(./cli/cambc login*)",
+      "Bash(cambc login*)"
+    ]
+  },
+  "sandbox": {
+    "network": {
+      "allowedDomains": ["github.com", "2026a.battlecode.co.uk"]
+    }
+  }
+}

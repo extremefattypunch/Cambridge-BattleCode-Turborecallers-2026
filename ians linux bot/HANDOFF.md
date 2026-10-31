@@ -23,8 +23,29 @@ _Last updated: 2026-10-31, Sprint 3 day (lock 23:59 GMT = 19:59 EDT). Written fo
 
 ## 2. Round-robin among the builder bots (sprint maps, 40 games per pair)
 ```
-(filled in below when finished)
+SUMMARY tb_deathball vs tb_splitfarm: 12W-28L (30%)  avg gems 502 vs 746
+SUMMARY tb_deathball vs tb_aggro: 14W-26L (35%)  avg gems 523 vs 747
+SUMMARY tb_deathball vs tb_economy: 21W-19L (52%)  avg gems 694 vs 642
+SUMMARY tb_splitfarm vs tb_aggro: 19W-21L (48%)  avg gems 604 vs 620
+SUMMARY tb_splitfarm vs tb_economy: 30W-10L (75%)  avg gems 817 vs 423
+SUMMARY tb_aggro vs tb_economy: 28W-12L (70%)  avg gems 732 vs 499
+
+win% (row vs column)
+               tb_deathba tb_splitfa   tb_aggro tb_economy
+tb_deathball            -        30%        35%        52%
+tb_splitfarm          70%          -        48%        75%
+tb_aggro              65%        52%          -        70%
+tb_economy            48%        25%        30%          -
+
+RANKING
+  tb_splitfarm     77/120  wins (64%)  avg gems 722
+  tb_aggro         75/120  wins (62%)  avg gems 700
+  tb_deathball     47/120  wins (39%)  avg gems 573
+  tb_economy       41/120  wins (34%)  avg gems 521
+
+[exited with code 0]
 ```
+Conclusion: tb_splitfarm (64%) was chosen as the improvement base. tb_aggro (62%) is close and wins head-to-head 21-19; its fight/retreat logic is worth grafting.
 
 ## 3. Submissions (website version history)
 | Version | Bot | Note | When |
