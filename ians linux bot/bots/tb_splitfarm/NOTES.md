@@ -52,10 +52,31 @@
 
 ## Eval numbers (tools/eval.py vs starter-python)
 - v1 (no enemy handling): quick 15W-9L (62%), gems 457 vs 331, deaths 5.1 vs 38.7.
-- see bottom for later runs.
+- v2 (+attrition model, respawn-tile deadlock fix, bush-hidden camps, crossing fixes):
+  quick 23W-1L (96%), gems 935 vs 285, deaths 7.5 vs 38.8.
+- v3 (+always step away from unfavourable enemies, ally dps in fight check, recall to shop
+  when rich): quick 24W-0L, gems 960 vs 173, deaths 4.2 vs 36.2.
+- FINAL sprint (20 maps x 2 sides):
+  SUMMARY tb_splitfarm vs starter-python: 40W-0L (100%)  avg gems 878 vs 152  avg deaths 3.3 vs 39.7  botFaults(A) 0
+- Tried and reverted: (a) attacking huge groups (00stampede 20-camp elk herd) with a
+  "local strength" model and 12-cycle cap - never finished the herd and lost the gold
+  tiebreak; (b) caching the whole-map DistanceField for 8 turns + re-scoring targets every
+  4 turns - cut fuel a lot but movement/targeting regressed badly on 01big-world (15 gems);
+  saved in matches/tb_splitfarm_scratch/bot_cache_attempt.py.
+
+## Fuel
+- Measured with cambc.fuel_remaining() on 01big-world (100x100-ish): one full-map
+  DistanceField.compute costs ~575k fuel; scoring 24 groups in Python costs ~900k
+  (~37k fuel per group!); observe ~100k; threats ~50-80k. A turn can exceed the 2.5M
+  budget on big maps (the bot gets suspended and resumes next round). Python per-group
+  loops are the expensive part, not the native ops. Only safe fix shipped: the target
+  is scored once per turn (the tribute check reuses it).
 
 ## Known weaknesses
 - No multi-hop island crossing; TP landing only within 3 tiles of the staging tile.
 - Monolith is never attempted (too much damage per cycle).
-- Small dense maps (00gemfight): team spreads and walks too much; the starter's
-  4-champion blob farms faster.
+- Maps whose only gems sit behind a monolith or a 20-camp elk herd (02guardians,
+  00stampede) score 0 gems; we only win those on the gold tiebreak.
+- Fuel heavy on 100x100 maps (see Fuel) - occasional mid-turn suspension.
+- Enemy fight model is simple (ttk comparison); a focused champion-hunting opponent
+  could still pick off lone farmers.

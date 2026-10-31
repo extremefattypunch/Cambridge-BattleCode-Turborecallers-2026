@@ -94,7 +94,21 @@ in it depends on a map name).
 Single-game results vary from run to run: the engine seed changes per run, e.g. 01gold-rush A
 scored 274 in one v4 run and 461 in another. Compare whole evals, not single games.
 
+Final run on the 20-map sprint set, both sides, vs starter-python (the same code as v5):
+
+`SUMMARY tb_deathball vs starter-python: 40W-0L (100%)  avg gems 901 vs 144  avg deaths 3.7 vs 34.9  botFaults(A) 0`
+
+Quick 12-map set, one side only, vs starter-cpp:
+`SUMMARY tb_deathball vs starter-cpp: 12W-0L (100%)  avg gems 1006 vs 186  avg deaths 2.4 vs 32.4  botFaults(A) 0`
+
 ## Known weaknesses
+
+* **00stampede and 02guardians: 0 gems for both sides.** We still won these games, but only on
+  the lifetime-gold tiebreak. On 00stampede every gem sits in one huge Elk herd, about 6 Elks plus
+  clusters, and the danger filter rejects it for a squad and for the full team. On 02guardians we
+  also take 16-22 deaths. A "merge both squads for a group too big for a half-team" rule, plus a
+  better damage model (only camps within range of the tank actually hit), would fix this. It is
+  the next thing to do.
 
 * Only tested against the starter bots. A coordinated enemy ball, or altar locks, are untested.
 * No TP crystal or dash use, so groups that can only be reached across holes are ignored.

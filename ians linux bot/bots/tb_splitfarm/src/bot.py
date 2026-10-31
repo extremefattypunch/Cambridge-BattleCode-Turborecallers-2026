@@ -556,9 +556,6 @@ class Bot:
             else:
                 hl = G.hp_left() if G.status == 0 else sum(G.maxhp.values())
                 s = G.alive_strength() if G.status == 0 else G.strength
-                if G.n >= 3:
-                    # big spread-out groups: only a couple of camps reach us at a time
-                    s = min(s, 2.0 * max(st for cc, pp, st, rr in G.camps))
                 tdps = dps + c * 55.0
                 ttk = hl / tdps
                 if s > 0:
@@ -574,7 +571,7 @@ class Bot:
                             continue
                         per_cycle = budget / (s * dmg_mult) * tdps
                         cycles = hl / per_cycle
-                        if cycles > (12 if G.gems >= 60 else 4):
+                        if cycles > 4:
                             continue
                         extra = cycles * 30.0
             if rnd + d + ttk + 8 > MAX_ROUNDS:
@@ -857,6 +854,8 @@ class Bot:
 
         # ---- tribute decision
         gems = me.gem_count()
+        tgt = None
+        chosen = False
         if gems > 0:
             ad = self.altar_distance(field, visited)
             if ad >= BIG:
@@ -866,6 +865,7 @@ class Bot:
                   or (gems >= 12 and hp < maxhp * 0.6) or (gems >= 10 and enemies))
             if not go:
                 tgt = self.choose_target(me, rnd, field, visited, comp)
+                chosen = True
                 if tgt is None:
                     go = True
             if go:
@@ -874,7 +874,7 @@ class Bot:
                 return
 
         # ---- farming
-        G = self.choose_target(me, rnd, field, visited, comp)
+        G = tgt if chosen else self.choose_target(me, rnd, field, visited, comp)
         self.target = G
         if DEBUG and rnd - self.last_print >= 100:
             self.last_print = rnd
