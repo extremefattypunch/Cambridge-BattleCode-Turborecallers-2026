@@ -1,15 +1,11 @@
 # Loop status (updated every tick)
 
-- **Last tick:** 2026-10-31 18:50 EDT.
+- **Last tick:** 2026-10-31 19:16 EDT.
 - **Champion:** `tb_merge_b` (Python), website v2, **Active / Verified**.
-- **Ladder:** v2 is **24W-6L** over 6 sets (5-0, 5-0, 3-2, 4-1, 4-1, 3-2). Rating 1,407 → **1,465**.
-  - By team size: 3-pick 3/6, 4-pick 10/11, 5-pick 11/13. **3-pick is the weak spot.**
-  - Losses:
-    - 02arena and adgato_gemcombat4 vs "test";
-    - 00galaxy and 00swirl vs C-- (Vesper, Tavi, Marcella, Willow, Vendetta);
-    - 01broken_curve vs Blame the Altar (3-pick);
-    - 02the_pack 0-0, lost on the gold tiebreak (3-pick).
-  - Log: `results/ladder-games.jsonl` (95 games).
+- **Ladder:** v2 is **36W-9L** (80%) over 9 sets. Rating 1,407 → **1,493**.
+  - By team size: 3-pick **6/11**, 4-pick 12/14, 5-pick 18/20. 3-pick maps hold 5 of the 9 losses.
+  - 02the_pack was lost **twice on the 0-0 gold tiebreak**.
+  - Run `python3 -I tools/ladder_log.py` for the full list; the log is `results/ladder-games.jsonl` (110 games).
 - **Next lock:** Sprint 3, 19:59 EDT. **Upload freeze is active (18:59–19:59).** After that: International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov.
 - **Running:**
   - strategy batch 1 (`wt89dw4p0`): h_3pick (Q18), h_goldtie (Q2), h_earlyfight (Q12), h_antistun (Q15), h_fightfuel (Q13). Each gets a test plus an independent analysis and a report in `results/experiments/`.
