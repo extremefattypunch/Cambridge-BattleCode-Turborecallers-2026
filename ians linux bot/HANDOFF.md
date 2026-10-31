@@ -71,7 +71,7 @@ Based on `postmortems/INSIGHTS.md` §4 and our own metrics. Strike items off as 
 
 ## 6. Overnight improvement protocol (suggested)
 For reference, one 2000-round Python game took about 10–20 s of wall time on the 16-core dev PC (24-game eval with `--jobs 6` ≈ 50 s). Use `docs/CLI_ONLY.md` for the browser-free equivalents of site tasks.
-1. `CHAMP=$(cat results/CHAMPION)`. Copy it to a new bot: `cp -r bots/$CHAMP bots/<cand> && rm -rf bots/<cand>/.cambc`.
+1. `CHAMP=$(cat results/CHAMPION)`. Copy it to a new bot: `python3 -I tools/newbot.py $CHAMP <cand>`, which copies it without its build cache and validates the names.
 2. Make **one** focused change, taken from §5 or from replay or metric analysis:
    - `python3 tools/eval.py <cand> $CHAMP --maps quick --keep --tag dbg`
    - Then read the replay zip's `team-a.stdout`, and use `postmortems/match_metrics.py matches/dbg`. Death events name the killer.

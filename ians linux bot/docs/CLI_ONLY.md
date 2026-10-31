@@ -14,6 +14,6 @@ Facts about the cambc tooling for an agent that has a shell but no browser. How 
 - `cambc login` is interactive, the session lasts 7 days, and it is untested so far. A human runs it once.
 - Setup commands are in the repo-root `CLAUDE.md`.
 - `claude-settings.example.json` (in this folder) is an **optional** starting permission allowlist for an unattended Claude Code agent:
-  - It allows the harness, `cambc run/maps/matches`, and git add/commit/push.
-  - It denies `cambc submit/submissions/login` and force-pushes.
+  - It allows only the exact harness scripts (`tools/{eval,tournament,gauntlet,newbot}.py`, `match_metrics.py`), `cambc run/build/bundle/maps`, edits under `bots/` and `results/` and to `HANDOFF.md`, and exact git forms.
+  - It denies edits to `tools/`, `postmortems/`, `.git/`, `.claude/` and `cli/`, so allowed scripts can't be rewritten and then run without a prompt. It also denies `cambc submit/submissions/login/match-groups create`, force-pushes, and git `--output`/`--ext-diff`/`-c`.
   - Adapt it as needed and check with `/permissions`.
