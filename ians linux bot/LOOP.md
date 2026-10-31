@@ -18,7 +18,8 @@ A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**
    - Record it in STATUS.md.
 2. **Ladder research** (real games are analysed too).
    - In the logged-in Chrome tab, fetch `/api/v1/match-groups?scope=team`, then `/api/v1/match-groups/<id>` for any new groups.
-   - Append the new games to `results/ladder-games.jsonl`, deduplicated by match id. Each line holds: version, opponent, opponent rating, map, side, result, scores, rounds, end reason, both drafts.
+   - Save the responses as a list via the localhost receiver to `matches/ladder/raw/<name>.json`.
+   - Run `python3 -I tools/ladder_log.py matches/ladder/raw/<name>.json`. It appends the new games to `results/ladder-games.jsonl`, deduplicated by match id, and prints the record by version and team size plus the live version's losses.
    - Record the rating in STATUS.md.
    - Turn each **new** loss pattern into a strategy hypothesis in STRATEGIES.md (opponent comp, map type, how they won).
    - Format JS output with `|` separators (outputs that look like query strings are blocked).
