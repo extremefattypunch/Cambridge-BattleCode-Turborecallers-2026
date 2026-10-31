@@ -1,9 +1,9 @@
 # Handoff: Turbo Recallers Python bot (cambc 2026a)
 
-_Last updated: 2026-10-31, Sprint 3 day (lock 23:59 GMT = 19:59 EDT). Written for the next Claude agent, e.g. one running overnight improvement loops on a cluster._
+_Last updated: 2026-10-31 ~17:45 EDT, after the Sprint 3 submission (lock 23:59 GMT = 19:59 EDT). Written for the next Claude agent, e.g. one running overnight improvement loops._
 
 ## 1. Where things stand
-- **Live submission:** see §3. The current champion bot is named in `results/CHAMPION`.
+- **Live submission:** `tb_merge_b` (website v2) is selected for Sprint 3; see §3. The current champion bot is named in `results/CHAMPION` (= `tb_merge_b`).
 - **Upcoming events** (check https://2026a.battlecode.co.uk/game/tournaments for exact lock times): International qualifiers on 4 Nov, UK qualifiers on 11 Nov, in-person finals on 18 Nov at the Cambridge Union. All sprints and tournaments use **unseen maps**.
 - **Ladder context** on 31 Oct: 815 ranked teams. The top 10 are almost all C++, rated about 2,300–2,650.
 - **Our bot lineage:**
@@ -19,7 +19,7 @@ _Last updated: 2026-10-31, Sprint 3 day (lock 23:59 GMT = 19:59 EDT). Written fo
 
   3. `sf_base` is a frozen copy of `tb_splitfarm`, the baseline for the improvement round.
   4. Improvement round: five agents each patched a copy of `sf_base` (`sf_fuel`, `sf_bank`, `sf_draft`, `sf_pvp`, `sf_maps`). Patches are in `matches/patches/` (gitignored) and also in each bot's CHANGES.md. See §4.
-  5. Merged result: see §4.
+  5. Merge round: `tb_merge_b` is the final Sprint 3 bot. See §4.
 
 ## 2. Round-robin among the builder bots (sprint maps, 40 games per pair)
 ```
@@ -43,14 +43,16 @@ RANKING
   tb_deathball     47/120  wins (39%)  avg gems 573
   tb_economy       41/120  wins (34%)  avg gems 521
 
-[exited with code 0]
 ```
 Conclusion: tb_splitfarm (64%) was chosen as the improvement base. tb_aggro (62%) is close and wins head-to-head 21-19; its fight/retreat logic is worth grafting.
 
 ## 3. Submissions (website version history)
 | Version | Bot | Note | When |
 |---|---|---|---|
-| v1 | tb_splitfarm (= sf_base) | interim; split-map farmer with TP crystal crossing | 31 Oct 19:31 UTC |
+| v1 | tb_splitfarm (= sf_base) | interim; split-map farmer with TP crystal crossing. Verified on the platform | 31 Oct 19:31 UTC |
+| v2 | **tb_merge_b** | final Sprint 3 bot: splitfarm + fight/flee, banking, pvp focus/locks, meta draft, fuel cache. Selected for the next match | 31 Oct 21:42 UTC |
+
+`sf_bank` was bundled as an interim upgrade but never uploaded: browser access to the site dropped for a while, and the merge finished first. Zips are in `submissions/` (gitignored).
 
 ## 4. Improvement round and merge
 Five agents each patched a copy of `sf_base` (`tb_splitfarm`) along one dimension. Each bot dir has CHANGES.md with per-change measurements; the patches (gitignored) are in `matches/patches/`. Results vs sf_base on sprint maps (40 games):
@@ -68,7 +70,7 @@ Lessons from the round:
 - The single capture recipient and the item-13 scoring multipliers both lost and are shipped OFF.
 - A "travel dash" lost (dash on cooldown when enemies appear).
 
-**v2 (sf_bank)**, live once uploaded, see §3. **Merge round:** three independent merges (`tb_merge_a`: bank→pvp→draft→fuel; `tb_merge_b`: pvp→bank→draft→fuel; `tb_merge_c`: bank→draft→fuel), each validated against `sf_bank`. Results below.
+**Merge round:** three independent merges (`tb_merge_a`: bank→pvp→draft→fuel; `tb_merge_b`: pvp→bank→draft→fuel; `tb_merge_c`: bank→draft→fuel), each validated against `sf_bank`. Results below.
 
 ### Merge results (31 Oct, ~17:30 EDT)
 | Merge | Patches | vs sf_bank (sprint, 40) | vs tb_aggro (quick) | fuelExhausted/game |
@@ -80,19 +82,19 @@ Lessons from the round:
 Round-robin among the merges (`results/roundrobin-merges-2026-10-31.txt`): **tb_merge_b 68%**, tb_merge_a 64%, tb_merge_c 19%. tb_merge_a vs tb_merge_b went 20-20.
 **tb_merge_b was chosen as the final Sprint 3 bot.** Its NOTES.md explains how each conflict was resolved: sf_bank's kill-time model decides fights, and sf_pvp's focus and channel bias is layered on top.
 
+**Robustness check on all 70 local maps × both sides vs sf_bank:** `125W-15L (89%)`, avg gems 840 vs 251, deaths 6.5 vs 16.4, botFaults 0. Metrics: mean tribute 27.0, camp deaths 1.0/game, fuelExhausted 81.5/game, 380 wards/game, 7.4 consumables/game. Log: `matches/final-mergeb-all.log` (gitignored).
+
 ## 5. Known weaknesses and next steps (prioritised)
-Based on `postmortems/INSIGHTS.md` §4 and our own metrics. Strike items off as they land in the champion.
-1. **Fuel exhaustion:** about 300 suspended turns per game in sf_base, worst on 100×100 maps. Cache static DistanceFields, add fuel guards, and move map analysis into the draft (250M fuel; only the 1,024-byte draft memory carries over to champions).
-2. **Banking:** top-20 teams tribute 32–56 gems per trip; sf_base averages 19. Use the census rule (bank ≥30 anywhere, ≥15 near an altar, ≥5 adjacent; halve when threatened; always bank at round ≥1900 or when banked + carried ≥ 1000).
-3. **Meta draft:** all 20 top teams play Heart of Ruin + Marcella + Vendetta + Vesper Vale (+ Ryth or Tavi). Pair it with correct kit usage: HoR's landing-dash stun, Marcella's enhanced reset only after a basic attack.
-4. **Items:** Bruiser shards on the main stat (the top teams' habit; 7 shard-points per 150 gold). We open with Jungle and Monster.
-5. **PvP:** focus channelling enemies and gem carriers (a stun cancels tribute, recall and teleport). Use altar locks (10 g; placing one cancels enemy tributes at that altar). Place wards whenever the charge is up (all top-20 teams do).
-6. **Map archetypes**, detected in the draft from map *contents*:
-   - Monolith-gated altars (02guardians and 01boss-battle score 0–0 today).
-   - Huge elk herds (00stampede).
-   - Jackpot groups (00the-line, 00vault).
-   - Disconnected islands (handled via TP crystals).
-7. **Test against stronger, different opponents.** Self-play and starter-only testing hide weaknesses. Download real top-team replays from `/game/match-database` (huge, 15 GB a day) or ladder matches (`cambc matches` after `cambc login`) to study how top teams play.
+Postmortem items 1–5 (fuel, banking, meta draft, Bruiser items, PvP focus/locks/wards) are now **in `tb_merge_b`**. What remains, roughly by expected value:
+1. **0–0 maps lost on the tiebreak.** Five of the 15 losses on the 70-map check were 0–0 at round 2000: 01boss-battle, 02guardians, 02gift-wrapping, 02the-pack, 01yellow-brick-road. The tiebreak is **lifetime gold earned, then kills, then Team B**.
+   - Detect "no gems reachable or safe" early, then deliberately maximise gold (gold clusters, kills, Vesper's +33% gold).
+   - Or crack the gate as a team. `sf_maps` has gate/herd detection code (`src/mapprofile.py`) and a partly working gated-altar assault (02guardians side A won 4 out of 4 in isolation).
+2. **Real opponents.** Everything so far is self-play within our bot family. The aggressive pvp bias (engage ratios up to ~1.75 against channelling carriers) may backfire against bots that cancel a tribute and fight back. Watch our ladder matches (`cambc matches`, or /game/matches on the site) and replays; consider `cambc match-groups` vs strong teams. Note it uses the team's shared quota.
+3. **Residual fuel exhaustion**, about 80 per game, concentrated on 00lanes (~650 per game) and 01islands. It comes from `observe`/`threats` and from fight code during big brawls. Add fuel guards there.
+4. **Draft for 5-pick maps.** HoR is our weakest farmer (sf_draft measured ~6–8k monster damage vs 15–24k for others). `tb_merge_c`'s experiment (Ryth 4th, Varg 5th, HoR 6th) went 14W-6L vs 8W-12L on the 4/5-pick maps. Worth an A/B on tb_merge_b, or improve HoR's farming instead.
+5. **01concentrated-wealth** was lost on both sides by every merge; investigate with `--keep` replays.
+6. **Stand-offs** (both teams frozen, e.g. 02the-pond side B, 00vault side B). Mutual chase/retreat loops; the chase guard and stall breaker help but don't eliminate them.
+7. **Ideas not yet tried:** carry concentration (route captures to Vesper/Marcella), alert-triggered regrouping (top-20 habit), the Capture emblem for faster captures, and smarter ward placement that feeds enemy sightings into shared memory (byte 6 is free).
 
 ## 6. Overnight improvement protocol (suggested)
 For reference, one 2000-round Python game took about 10–20 s of wall time on the 16-core dev PC (24-game eval with `--jobs 6` ≈ 50 s). Use `docs/CLI_ONLY.md` for the browser-free equivalents of site tasks.
