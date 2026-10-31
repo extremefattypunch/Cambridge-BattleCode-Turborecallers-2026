@@ -50,4 +50,5 @@ Champion: see `results/CHAMPION`.
 | Q16 | **Varg with a Bruiser plan**, then retest lad_varg4 on all 70 maps | draft-imitation | Varg out-farms HoR by ~55 gems/game, but the swap was neutral (Varg had no item plan) |
 | Q17 | **Cassi&Issac linked-fate logic** (keep both alive, kite together) | draft-imitation | Imitations' C&I died 6.5-7.5×/game; needed only if we draft them |
 | Q18 | **3-pick draft with a stun anchor** (e.g. Vesper, Vendetta, Ryth) on 3-pick maps only | ladder-stats (02arena loss) | v2 is 0-1 on 3-pick maps, so untested |
+| Q19 | **Mirror-meta matchups at ~1500**: Halma _und _Oleck and The Dreamyard draft our exact meta comp (Vesper/Vendetta/Marcella/HoR + Ren/Ryth) and beat us 3-2 each (00quadrants lost by r737, 02uncharted_lands, 00lanes, adgato_gemcombat4, 01fracture, 02famine). Study their replays: target choice, fight timing, items, tribute size. Then test the specific behaviour differences | Ladder 31 Oct ~23:30 UTC | Our 5-pick record fell from 18/20 to 23/32 as our rating rose; the mirror is the main matchup at higher rating |
 | Q11 | **C++ port** (parallel track, user request) | User | Only if it beats the Python champion |
