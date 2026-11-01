@@ -53,6 +53,8 @@ Champion: see `results/CHAMPION`.
 | T27 | Q30 large-map fix (h_bigmap): claim-rule target 2-cycle in choose_target | q24 gate report | 80W-60L vs q24_combo (LB 0.489) | fails the gate by 2; merge component |
 | T28 | Placebo calibration (null changes vs q24_combo) | h_antistun hypothesis | 66/140 and 68/140 (mirror 70); 85 and 90 vs tb_merge_b | the gate's noise floor is below binomial; keep the gate |
 | T29 | v3 ladder study (is q24_combo worse than v2 on the ladder?) | ladder 1 Nov | 25 mislabelled games found; rating-controlled −54 Elo [−166, +65], p 0.36; mechanisms 2-4 confirmed on real games | keep v3; successors must also beat tb_merge_b |
+| T30 | c3_teamclear = q24_combo + Q26 team bootstrap | T23 | 80W-60L vs q24_combo (LB 0.489); gauntlet 176/200 vs 174; fuel 9.5 vs 7.3 per game | **gate failed**. Team clears fix 02gift-wrapping (0 → 19 clears, W 1000-0, beats starter-python), but muster idling (139 turns/game) cancels the gain elsewhere. Next: team clear only as a fallback when no solo target exists |
+| T31 | Q27 refined: spawn-heal-aware fighting with fixes (h_spawnheal) | T24 | 74W-66L vs q24_combo | inconclusive |
 
 ## Queue (highest expected value first; refine with each ladder pull)
 
@@ -163,3 +165,17 @@ Champion: see `results/CHAMPION`.
 | Late-race gem protection on big maps | 2026-11-01-h_bigmap.md | The farming fix now builds leads on big maps that are given back in late fights. Banking before engaging while carrying 15 or more gems after about r1000 could keep them. |
 | Seat-specific big-map losses: 01big-world seat A and 00ambush seat A | 2026-11-01-h_bigmap.md | A seat effect that is consistent across bots points to a geometry problem (altar choice or a guarded path) worth one traced study. These maps are where big-map losses remain. |
 | Q31 still open: move init_gold's reachable_tiles flood out of turn 1 | 2026-11-01-h_bigmap.md | It costs about 1 opening round on exactly the large maps this experiment targets. |
+
+## New hypotheses from batch 4 (1 Nov)
+| Hypothesis | Source report | Why it might win |
+|---|---|---|
+| c4: team option only as an idle fallback, built on the c2_respawn champion | 2026-11-01-c3_teamclear.md | It keeps the ladder-relevant 02gift-wrapping fix (0-80 to 1000+ vs starter-python) and removes the muster and capture-split costs where solo farming already works. c2 supplies the Q21 freeze fix that team clear needs (h_ |
+| Lazy boss gate: compute Group.boss on first use, not with one is_monolith() call per camp at init | 2026-11-01-c3_teamclear.md | It makes gate (c) pass and gives back the first turn on large maps at essentially zero risk. |
+| Cumulative muster budget per group and per champion; no musters toward far groups on large maps | 2026-11-01-c3_teamclear.md | The resettable 15/30-round clocks let a champion idle for hundreds of rounds; a budget caps the downside while keeping productive musters. |
+| Altar-camp standoff breaker | 2026-11-01-c3_teamclear.md | When behind with no banking progress for ~150 rounds and enemies idle near the altar: heal to full, lower the bank threshold, and commit all champions together or bank elsewhere. It removes a round-limit loss to passive  |
+| Gate reports must split targeted vs off-target maps and census the new logic's activity | 2026-11-01-c3_teamclear.md | It stops re-roll gains being credited to a mechanism and shows where a refinement should aim. |
+| Q27e: handle spawn-parked enemies as a hazard to avoid, not ignore, against fighters | 2026-11-01-h_spawnheal.md | When all near enemies are spawn-healed, handle_enemies returns False and we farm on inside their range. Stepping out of their range, treating them as awake camps even on touching maps, and re-engaging when they step off  |
+| Q27f: win the opening gold race on cluster maps (Q27c residue) | 2026-11-01-h_spawnheal.md | A per-champion floor with a 100-round grace still lets the chain go gem-first in the opening, and on item-driven maps that snowballs. Try: no chain until the first Bruiser emblem (150 gold), a team-level floor in shared  |
+| Q27g: altar-box exemption from the gold floor to reach r700 on 02treasure_box | 2026-11-01-h_spawnheal.md | Groups inside the altar's own walled component and within ~8 steps of its ring could chain without the gold floor, buying treasure-box pace without the breadcrumbs gold loss (those clusters are not altar-boxed). |
+| Q27h: build a heal-hopper imitation opponent (merge with Q29/Q31) | 2026-11-01-h_spawnheal.md | The spawn-adjacent rule, and Q27e, can only be evaluated against an opponent that steps on its spawn below ~60% HP and steps out to fight, e.g. Willow + Vesper + Tavi. |
+| Q30 addendum: judge screened candidates on non-screen maps; renames are safe, source edits are not | 2026-11-01-h_spawnheal.md | Screen selection inflates the gate on screen maps. Reporting the off-screen share removes that bias, and single-map outcome claims need at least 2 perturbations. |

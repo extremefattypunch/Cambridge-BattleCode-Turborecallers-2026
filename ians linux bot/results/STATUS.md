@@ -1,7 +1,7 @@
 # Loop status (updated every tick)
 
 - **Last update:** 2026-11-01 00:40 EDT: **c2_respawn promoted and uploaded as website v4**. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
-- **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), uploaded as website **v4** at 04:36 UTC on 1 Nov after a full gate pass plus a skeptic pass (`results/READY.md`). v3 (q24_combo) stays live until v4 is verified.
+- **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), website **v4**, **live since ~04:40 UTC on 1 Nov** after a full gate pass plus a skeptic pass (`results/READY.md`).
 - **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/experiments/2026-11-01-v3-ladder-study.md`) found:
   - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
   - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
@@ -30,10 +30,10 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - **Login-node rules:** run no games locally, not even a single debug game; send them through `tools/onslurm.sh -c 2 -m 2G -t 00:05:00 -J dbg -- ./cli/cambc run ...`. Long analysis scripts also go through onslurm.
 
 ## In progress
-- **Workflow `battlecode-batch4`:**
-  - **c3_teamclear** = q24_combo + Q26 team bootstrap, gated vs q24_combo;
-  - **Q27-refined** h_spawnheal.
-  - Next: **c4 = c2_respawn + team clear** (and a fix for c2's 3-pick mirror-draft regression), gated vs c2 **and** vs tb_merge_b.
+- **Batch 4 (finished 00:50 EDT):**
+  - **c3_teamclear failed the gate** (80/140 vs q24, LB 0.489). It fixes 02gift-wrapping, but muster idling cancels the gain elsewhere.
+  - **h_spawnheal** was inconclusive (74/140).
+  - Next: **c4** = c2 + team clear as a *fallback only* (when no champion has a solo target), gated vs c2 and tb_merge_b.
 - **Workflow `battlecode-batch5`** (launched 00:45 EDT), on c2_respawn: **c2_3pick** (the 3-pick mirror-draft regression fix), **h_shortcut** (V3L-2, 01shortcut stuck champion) and **h_bosscommit** (V3L-3, boss-camp commit timing). Each candidate is tested vs c2_respawn and vs tb_merge_b.
 
 ## Done this session
