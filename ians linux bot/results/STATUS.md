@@ -1,8 +1,12 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-10-31 21:35 EDT (tick). v3 was still `queued` (verification pending) at 01:31 UTC; v2 is live until it activates. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Last update:** 2026-11-01 00:15 EDT (tick, after a usage-limit pause from ~22:00 to 00:00 EDT; workflow agents hit HTTP 429 and resumed by themselves). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `q24_combo` (Python), uploaded as website **v3** at 01:24 UTC on 1 Nov after a full gate pass (87/140 vs tb_merge_b, gauntlet 174 vs 158; `results/READY.md`). Confirm v3 shows Active / Verified on the next ladder pull. The previous bot `tb_merge_b` (v2) was our Sprint 3 entry.
-- **Ladder (pulled 1 Nov 01:31 UTC via `python3.12 tools/ladder_pull.py`):** v2 is **74W-36L** (67%), rating **1,530** (up from 1,497; the last 15 games went 12-3). Games are attributed to versions by activation time (`results/ladder-versions.json`), because uploads stay `queued` until verified.
+- **Ladder (pulled 1 Nov 04:10 UTC):** **v3 (q24_combo) went live at 01:42 UTC** (when v2 was deactivated; v3's own `statusAt` was refreshed later, so it misled).
+  - **v3 is 24W-26L (48%), rating 1,526, flat**, against opponents rated ~1,520-1,575.
+  - v2's comparable recent window was 21-9 (70%) against ~1,490-1,530. All of v2 is 87W-48L.
+  - v3 still loses 02treasure_box (3 more times); its 0-0 gold play won 02the_pack but lost 01boss_battle to AI Coliseum.
+  - **Workflow `battlecode-v3-ladder-study`** (launched 00:15 EDT) asks: is v3 really worse, and why?
   - By team size: 3-pick 13/19, 4-pick 23/28, 5-pick 38/63.
   - New loss patterns: **02gift_wrapping** (0 clears all game, lost 0-1028 and 16-1006: Q26); **02treasure_box** (0 tributes, lost 0-1002 and 163-1005: Q27); **7 close races** where the opponent hit ~1000 first (Q28); 0-0 gold tiebreaks on 01boss_battle and 02guardians (h_goldtie's target).
   - CLI login done 1 Nov ~01:00 UTC; it **expires ~7 Nov**. Ladder statistics are in `matches/ladder/summary/<id>__<our side>.json` (feed `tools/analyze_match.py` directly).
