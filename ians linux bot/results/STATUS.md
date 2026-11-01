@@ -33,7 +33,7 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - **Batch 4 (finished 00:50 EDT):**
   - **c3_teamclear failed the gate** (80/140 vs q24, LB 0.489). It fixes 02gift-wrapping, but muster idling cancels the gain elsewhere.
   - **h_spawnheal** was inconclusive (74/140).
-  - Next: **c4** = c2 + team clear as a *fallback only* (when no champion has a solo target), gated vs c2 and tb_merge_b.
+  - **Workflow `battlecode-batch6`** (launched 00:55 EDT): **c4_fallback** = c2 + team clear as a *fallback only* (when no champion has a solo target), plus a first-turn fuel fix. It gets a build, a review, the gate vs c2, the tb_merge_b hedge and a skeptic.
 - **Workflow `battlecode-batch5`** (launched 00:45 EDT), on c2_respawn: **c2_3pick** (the 3-pick mirror-draft regression fix), **h_shortcut** (V3L-2, 01shortcut stuck champion) and **h_bosscommit** (V3L-3, boss-camp commit timing). Each candidate is tested vs c2_respawn and vs tb_merge_b.
 
 ## Done this session
