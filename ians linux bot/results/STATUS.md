@@ -39,7 +39,11 @@ The session-only cron tick and any running workflows die whenever the Claude pro
   - **c3_teamclear failed the gate** (80/140 vs q24, LB 0.489). It fixes 02gift-wrapping, but muster idling cancels the gain elsewhere.
   - **h_spawnheal** was inconclusive (74/140).
   - **Workflow `battlecode-batch6`** (launched 00:55 EDT): **c4_fallback** = c2 + team clear as a *fallback only* (when no champion has a solo target), plus a first-turn fuel fix. It gets a build, a review, the gate vs c2, the tb_merge_b hedge and a skeptic.
-- **Workflow `battlecode-batch5`** (launched 00:45 EDT), on c2_respawn: **c2_3pick** (the 3-pick mirror-draft regression fix), **h_shortcut** (V3L-2, 01shortcut stuck champion) and **h_bosscommit** (V3L-3, boss-camp commit timing). Each candidate is tested vs c2_respawn and vs tb_merge_b.
+- **Batch 5 (finished ~01:10 EDT):**
+  - **c2_3pick kept** (3-pick vs the mirror-draft family 33/48 vs 20/48; 106/140 vs tb_merge_b).
+  - **h_shortcut kept** (a stuck-champion bug fix).
+  - **h_bosscommit rejected.**
+  - Both kept fixes are scoped, so they go into the next combo: **c5 = (c4 if it passes, else c2) + c2_3pick patch + h_shortcut fix**.
 
 ## Done this session
 - **Champion gauntlet baseline:** `tb_merge_b` **158/200** on sprint maps. In `results/gauntlet.jsonl`.
