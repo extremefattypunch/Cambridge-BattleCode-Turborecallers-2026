@@ -45,6 +45,8 @@ The session-only cron tick and any running workflows die whenever the Claude pro
   - **h_bosscommit rejected.**
   - Both kept fixes are scoped, so they go into the next combo: **c5 = (c4 if it passes, else c2) + c2_3pick patch + h_shortcut fix**.
 
+- **Workflow `battlecode-batch7`** (launched ~01:15 EDT), on c2_respawn: **h_antifocus** (V3L-1, the counter to the Us V Them focus casters; it first builds an imitation that reproduces the ladder loss) and **h_snowball** (Q29, a runaway enemy carry).
+
 ## Done this session
 - **Champion gauntlet baseline:** `tb_merge_b` **158/200** on sprint maps. In `results/gauntlet.jsonl`.
 - **Batch 2 (workflow `battlecode-batch2`, finished 21:20 EDT).** Reports are in `results/experiments/2026-11-01-*.md`.
