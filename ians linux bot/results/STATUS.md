@@ -34,6 +34,7 @@ The session-only cron tick and any running workflows die whenever the Claude pro
   - **c3_teamclear** = q24_combo + Q26 team bootstrap, gated vs q24_combo;
   - **Q27-refined** h_spawnheal.
   - Next: **c4 = c2_respawn + team clear** (and a fix for c2's 3-pick mirror-draft regression), gated vs c2 **and** vs tb_merge_b.
+- **Workflow `battlecode-batch5`** (launched 00:45 EDT), on c2_respawn: **c2_3pick** (the 3-pick mirror-draft regression fix), **h_shortcut** (V3L-2, 01shortcut stuck champion) and **h_bosscommit** (V3L-3, boss-camp commit timing). Each candidate is tested vs c2_respawn and vs tb_merge_b.
 
 ## Done this session
 - **Champion gauntlet baseline:** `tb_merge_b` **158/200** on sprint maps. In `results/gauntlet.jsonl`.
