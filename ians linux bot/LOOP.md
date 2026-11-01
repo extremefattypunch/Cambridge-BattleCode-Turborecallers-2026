@@ -37,12 +37,12 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
      - post the list to a localhost receiver, saving it to `matches/ladder/raw/<name>.json`;
      - format JS output with `|` separators, because outputs that look like query strings are blocked;
      - replay bundles (`/api/v1/matches/<id>/bundle`) are async: poll `pollUrl`.
-   - Then run `python3 -I tools/ladder_log.py matches/ladder/raw/<name>.json`. It appends the new games to `results/ladder-games.jsonl`, deduplicated by match id, and prints the record by version and team size plus the live version's losses.
+   - Then run `python3.12 -I tools/ladder_log.py matches/ladder/raw/<name>.json`. It appends the new games to `results/ladder-games.jsonl`, deduplicated by match id, and prints the record by version and team size plus the live version's losses.
    - Record the rating in STATUS.md.
    - Turn each **new** loss pattern into a strategy hypothesis in STRATEGIES.md (opponent comp, map type, how they won). Download replays only for losses we want to study, and run `tools/analyze_match.py` on their statistics.
 2b. **Scout every new match set** (user, 1 Nov: analyse what exactly we were weak at, what the opponent's strategy was, and how it was superior or inferior to ours, not just who we played).
    - Pull each new set with `python3.12 tools/ladder_pull.py`.
-   - **This is the top priority each tick.** `python3.12 tools/unscouted.py` lists the sets without a note, newest first. Run them through `tools/workflows/ladder_scout.js` (`Workflow({scriptPath: ".../ians linux bot/tools/workflows/ladder_scout.js", args: <that JSON>})`).
+   - **This is the top priority each tick.** `python3.12 tools/unscouted.py --claim` lists *and claims* the matches without a note, newest first, each with its folder name. A claim hides a match from other runs for 3 hours. Run them through `tools/workflows/ladder_scout.js` (`Workflow({scriptPath: ".../ians linux bot/tools/workflows/ladder_scout.js", args: <that JSON>})`).
    - Self-play experiments (step 3) keep running alongside at lower priority; the user wants both.
    - **One folder per real match:** `results/real-matches/<YYYY-MM-DD>_<HHMM UTC>_<opponent>_<group8>/notes.md`. That is the 5 games against one team in one match group. Use `results/real-matches/TEMPLATE.md`, in the user's order:
      1. the games played, briefly, against this exact team;
@@ -51,25 +51,35 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
      4. the weaknesses exposed, with the responsible code and testable hypotheses.
 
      Tools: `tools/scout.py` profiles both teams; `tools/analyze_match.py` narrates a game.
-   - With each batch of notes, rewrite (do not append to) the short, readable synthesis `results/real-matches/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`) and the ranked ledger `results/real-matches/WEAKNESSES.md`. Feed their top items into STRATEGIES.md.
+   - With each batch of notes, rewrite (do not append to) the short, readable synthesis `results/real-matches/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`; at most 150 lines) and the ranked ledger `results/real-matches/WEAKNESSES.md` (at most 25 open rows). Start from the current versions plus the new notes; never re-read every note. Feed the top items into the STRATEGIES.md queue.
    - `python3.12 tools/organize_notes.py` rebuilds `results/real-matches/INDEX.md` and `results/simulated-matches/INDEX.md`, and moves any note left in an old location.
    - The full replay zip (`cambc matches download <id>`) adds our bot's stdout and per-turn fuel trace when decisions need explaining.
 3. **Strategy experiments: hypothesis → test → detailed analysis → new hypotheses.** This is the core learning process. If fewer than about 2 experiment workflows are running, take the top untested items from the STRATEGIES.md queue and launch a workflow in which every strategy goes through all four stages:
+   - **(a0) Write the first half of the note before anything runs.** Run `python3.12 tools/new_sim_note.py <cand> --vs <champion> --prev <parent folder>`. It creates `results/simulated-matches/<date>_<HHMM UTC>_<cand>/notes.md` from TEMPLATE.md. Fill in and commit:
+     - §1, the parent simulated match analysed in the real-match format;
+     - §2, the hypothesis, the evidence links (real and simulated notes) and a numeric prediction.
+
+     §2 is never edited after the test.
    - **(a) Implement** the strategy in its own candidate bot (`tools/newbot.py <champion> <cand>`; never edit the champion).
    - **(b) Test** it against the champion, and against imitation opponents of real ladder comps when the hypothesis targets them (e.g. `imit_test`, `lad_*`). Use `tools/eval.py ... --keep`.
    - **(c) Analysis session (mandatory, for every experiment).**
-     - Run `python3 -I tools/analyze_match.py --summary matches/<tag> --games`, which contrasts wins and losses: gem race, opening tempo, K/D, damage, gold, fuel.
+     - Run `python3.12 -I tools/analyze_match.py --summary matches/<tag> --games`, which contrasts wins and losses: gem race, opening tempo, K/D, damage, gold, fuel.
      - Read full per-game narratives (`tools/analyze_match.py matches/<tag>/<map>__A.json`) for every loss and any surprising win: deaths with killer and location, per-champion lines, tribute habits.
      - Read bot stdout from the kept replay zips (`team-a.stdout`) when decisions need explaining.
      - Answer: did the mechanism we targeted actually change, and why did the remaining losses happen?
-   - **(d) Write one folder per simulated match:** `results/simulated-matches/<YYYY-MM-DD>_<HHMM UTC>_<cand>/notes.md`. Use `results/simulated-matches/TEMPLATE.md`, in the user's order:
+   - **(d) Complete the note** created in (a0). It is one folder per simulated match: `results/simulated-matches/<YYYY-MM-DD>_<HHMM UTC>_<cand>/notes.md`. Use `results/simulated-matches/TEMPLATE.md`, in the user's order:
      1. **The previous simulated match, analysed**, in the same format as a real-match note. This is the most recent finished simulated match this hypothesis builds on, usually the champion's own gate match or the experiment being refined.
      2. **The new hypothesis**: the change; why it should win; the evidence that it has promise, linking the real-match notes and earlier simulated-match notes that motivated it; the prediction.
      3. **The test**: setup, commands, verbatim SUMMARY/GAUNTLET lines.
      4. **This match, analysed**, in the same format: games, strategies compared, which was superior, whether the targeted mechanism changed, and why the remaining games were lost.
      5. **Verdict and new hypotheses** (kept / rejected / inconclusive / promoted, with gate numbers).
 
-     Then add those hypotheses to the STRATEGIES.md queue, record the verdict there, and never re-run a rejected idea unchanged. Combine compatible winners in a follow-up merge experiment.
+     Then run `python3.12 tools/organize_notes.py`, which rebuilds the indexes.
+   - **Keep STRATEGIES.md bounded.**
+     - Merge each new hypothesis into the single ranked `## Queue` table: one one-line row, linking the note for detail. Never add a separate "New hypotheses from …" section.
+     - Record each verdict as one row in `## Tested`, linking the note.
+     - Once the file passes ~300 lines, move closed Tested rows from before the current champion's lineage to `results/strategies-archive.md`.
+     - Never re-run a rejected idea unchanged. Combine compatible winners in a follow-up merge experiment.
 
    **No match is run without a hypothesis, and no experiment ends without an analysis session and a written report.**
 3b. **Candidate watch and the ready-to-submit bot** (user, 31 Oct).
@@ -77,7 +87,7 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
      - `results/CHAMPION` holds its name;
      - `submissions/READY.zip` holds its bundle;
      - `results/READY.md` holds its evidence and the watched candidates.
-   - Look actively for improved candidates. The moment any experiment shows **≥ 55% vs the champion on sprint** (a screening threshold only), immediately launch a gate workflow for it (step 4) on a frozen snapshot copy (`tools/newbot.py <cand> <cand>_g1`), without waiting for its batch to finish.
+   - Look actively for improved candidates. The moment any experiment shows **≥ 55% vs the champion on its test run** (usually all 70 maps; a screening threshold only), immediately launch a gate workflow for it (step 4) on a frozen snapshot copy (`tools/newbot.py <cand> <cand>_g1`), without waiting for its batch to finish.
    - Compatible near-winners (e.g. two candidates at 55% that change different subsystems) get a merge candidate that is gated too.
    - On promotion, rebuild READY.zip and **upload it as the live version right away** (step 5), so the live bot is always the best one we have, not only at deadlines.
 4. **Promotion gate: the candidate must be *certain* to outperform the champion** (user, 31 Oct: "it must be certain to outperform the old bot"). All of these must hold:
@@ -85,6 +95,8 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
    - **(b) Paired gauntlet:** `tools/gauntlet.py <cand> --pool <P> --maps sprint` and the same command for the champion, against the same pool `P` (currently sf_bank, tb_merge_a, tb_aggro, imit_test, lad_vcst). Total candidate wins must be **≥ the champion's**, and it must not lose more than 4 games' worth against any single opponent.
    - **(c) Robustness:** one `--release` game with 0 crashes, and `match_metrics` fuelExhausted not worse than the champion's.
    - **(d) Analysis session:** confirms the targeted mechanism changed and that the gain isn't an artefact (e.g. one map family).
+   - **(e) Old-bot hedge** (from 1 Nov, after the v3 ladder study): `tools/eval.py <cand> tb_merge_b --maps all` must score **≥ 82/140** and **no more than 8 below the champion's own score** against tb_merge_b (c2_respawn: 98/140). This guards against gains that exist only in self-play. Placebo runs vary by about ±3 here.
+   - **(f) Skeptic:** an independent agent tries to refute (a)-(e) from the kept games, including a release-mode rerun with logs on and a placebo-perturbed replicate. Promote only if the claim survives.
 
    **Anything short of this stays a candidate, never a submission.** Near-misses (e.g. 55–58%) are combined or refined and re-gated, not shipped.
 5. **Promote and submit.**
@@ -93,8 +105,14 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
    - Upload it: on the CLI, `cambc submit <bot> -n "<note>"` (needs `cambc login`); in a browser, /game/submissions (file input, then a note, then Upload; retry on HTTP 503). The user **pre-authorised** uploads of bots that pass the full gate.
    - Confirm the version turns **Active / Verified** on our next match.
    - Update HANDOFF.md §3.
-   - **Freeze window:** no uploads in the last 60 min before a tournament lock unless the candidate already passed the full gate.
-6. **Commit and push** STATUS.md, STRATEGIES.md, `ladder-games.jsonl`, experiment reports and any promoted or tested bots to branch `ians-linux-bot`, so teammates can follow. Raw `matches/` output is gitignored, so copy the key numbers into the experiment reports. On the dev PC, push needed the Bash sandbox disabled, and GitHub was intermittently flaky, so retry.
+   - **Freeze window:** no uploads in the last 60 min before a tournament lock (CLAUDE.md standing instruction), even for a candidate that passed the full gate. Upload right after the lock instead.
+6. **Commit and push** to branch `ians-linux-bot`, so teammates can follow:
+   - STATUS.md, STRATEGIES.md and `ladder-games.jsonl`;
+   - `results/real-matches/` and `results/simulated-matches/`, after `python3.12 tools/organize_notes.py`;
+   - `tools/` changes;
+   - any promoted or tested bots.
+
+   Raw `matches/` output is gitignored, so copy the key numbers into the notes. On the dev PC, push needed the Bash sandbox disabled, and GitHub was intermittently flaky, so retry.
 
 `tools/soak.py` exists, but per the user's rule it is **not** run continuously. Use it only to test a specific hypothesis, for example "does candidate X fix our weak maps?".
 

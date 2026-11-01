@@ -19,25 +19,29 @@ Everything lives in [`ians linux bot/`](ians%20linux%20bot). The rest of this pa
 flowchart TB
     subgraph REAL["REAL MATCHES (ladder, against other teams)"]
         LIVE["Our live bot plays<br/>ranked ladder matches"] --> PULL["tools/ladder_pull.py<br/>downloads every game's statistics"]
-        PULL --> RNOTE["One folder per real match<br/>results/real-matches/DATE_OPPONENT/notes.md"]
+        PULL --> RNOTE["One folder + notes.md per real match<br/>(results/real-matches/, format in §4.1)"]
         RNOTE --> INS["INSIGHTS.md and WEAKNESSES.md<br/>what real opponents do better than us"]
     end
+    PM["postmortems/INSIGHTS.md<br/>(other teams' published lessons)"]
+    QUEUE[("STRATEGIES.md queue<br/>ranked hypotheses")]
     subgraph SIM["SIMULATED MATCHES (the testing pipeline)"]
         HYP{{"New hypothesis<br/>(one change, with evidence)"}} --> CAND["Candidate bot =<br/>champion + that change"]
-        CAND --> TEST["Test: 140 games vs the champion<br/>plus reference opponents (free Slurm nodes)"]
-        TEST --> SNOTE["One folder per simulated match<br/>results/simulated-matches/DATE_CANDIDATE/notes.md"]
+        CAND --> TEST["Test vs the champion: 70 maps x both sides = 140 games<br/>plus reference/imitation opponents (free Slurm nodes)"]
+        TEST --> SNOTE["One folder + notes.md per simulated match<br/>(results/simulated-matches/, format in §4.2)"]
     end
-    INS -- "learning points from real matches" --> HYP
-    SNOTE -- "learning points from simulated matches" --> HYP
+    INS -- "learning points from real matches" --> QUEUE
+    SNOTE -- "learning points from simulated matches" --> QUEUE
+    PM -.-> QUEUE
+    QUEUE -- "top item (real-match evidence first)" --> HYP
     SNOTE --> GATE{"Promotion gate:<br/>certain to beat<br/>the champion?"}
-    GATE -- "no: refine, combine or reject" --> HYP
+    GATE -- "no: refine, combine or reject" --> QUEUE
     GATE -- "yes" --> UP["Upload: the candidate becomes<br/>the new champion and live bot"]
     UP --> LIVE
 ```
 
 In words:
 1. Every real match gets a careful note. The notes add up to a ranked list of our weaknesses.
-2. Weaknesses from real matches, and lessons from earlier simulated matches, become **hypotheses**.
+2. Weaknesses from real matches, lessons from earlier simulated matches and other teams' postmortems feed one ranked queue of **hypotheses** in `STRATEGIES.md`. Hypotheses with real-match evidence come first.
 3. Each hypothesis is built into a **candidate** bot (the champion plus one change) and tested in simulated matches.
 4. A candidate that is **certain** to beat the champion (see §3) is uploaded and becomes the bot playing the ladder. Its real matches then feed step 1 again.
 
@@ -45,74 +49,77 @@ In words:
 
 ```mermaid
 flowchart TD
-    T0(["Tick at :17 and :47"]) --> T1["1. Clock and the next tournament deadline<br/>Confirm which bot is live"]
-    T1 --> T2["2. Pull new ladder games"]
+    T0(["Tick every 30 min (:17 and :47)"]) --> T1["Step 1: clock and the next tournament lock<br/>Confirm which bot is live"]
+    T1 --> T2["Step 2: pull new ladder games"]
     T2 --> Q1{"New real matches<br/>without a note?"}
-    Q1 -- yes --> T2b["Analyse each one: a notes.md in its own folder<br/>Then rewrite INSIGHTS.md and WEAKNESSES.md"]
+    Q1 -- yes --> T2b["Step 2b: one notes.md per match, in its own folder<br/>Then rewrite INSIGHTS.md and WEAKNESSES.md"]
     Q1 -- no --> T3
-    T2b --> T3{"3. Fewer than 2 experiments<br/>running?"}
-    T3 -- yes --> T3b["Launch the next hypotheses from the queue<br/>(real-match evidence first)"]
+    T2b --> T3{"Step 3: fewer than 2 experiments<br/>running?"}
+    T3 -- yes --> T3b["Launch the top hypotheses from the queue<br/>Each gets a simulated-match note:<br/>sections 1-2 before the test, 3-5 after"]
     T3 -- no --> T4
-    T3b --> T4{"4. A candidate at 55% or more<br/>vs the champion?"}
-    T4 -- yes --> T4b["Run the full promotion gate (§3)"]
-    T4 -- no --> T5
-    T4b --> T5["5. Update STATUS.md, then commit and push"]
+    T3b --> T4{"Step 3b: a candidate at 55% or more<br/>vs the champion on its test run?"}
+    T4 -- yes --> T4b["Step 4: run the full promotion gate (§3)"]
+    T4 -- no --> T6
+    T4b --> G{"Passed?"}
+    G -- yes --> T5["Step 5: promote and upload<br/>(it becomes champion and live bot)"]
+    G -- no --> T6
+    T5 --> T6["Step 6: update STATUS.md, then commit and push"]
 ```
 
-Real-match analysis comes first each tick. Simulated experiments keep running alongside.
+Step numbers match `LOOP.md`. Real-match analysis (step 2b) comes first each tick; simulated experiments keep running alongside.
 
-## 3. The promotion gate: when does a new bot go live?
+## 3. The promotion gate (LOOP.md step 4): when does a new bot go live?
 
 ```mermaid
 flowchart TD
-    C["Candidate bot"] --> A{"(a) Head-to-head vs the champion:<br/>70 maps x both sides = 140 games.<br/>At least 82 wins (95% Wilson lower bound above 50%)<br/>and no bot faults?"}
+    C["Candidate bot"] --> A{"(a) 140 games vs the champion:<br/>at least 82 wins, 0 bot faults?"}
     A -- no --> X["Stays a candidate:<br/>refine it, or combine it with other fixes"]
-    A -- yes --> H{"Also clearly beats the old v2 bot<br/>(tb_merge_b)? This guards against<br/>self-play blind spots"}
-    H -- no --> X
-    H -- yes --> B{"(b) Gauntlet vs 5 reference bots:<br/>total wins at least the champion's,<br/>and no single opponent more than 4 wins worse?"}
+    A -- yes --> B{"(b) Gauntlet vs 5 reference bots:<br/>total wins at least the champion's,<br/>no opponent more than 4 wins worse?"}
     B -- no --> X
-    B -- yes --> R{"(c) Clean release-mode run<br/>and fuel use no worse?"}
+    B -- yes --> R{"(c) Clean release-mode run,<br/>fuel use no worse?"}
     R -- no --> X
     R -- yes --> D{"(d) Analysis: did the intended<br/>mechanism actually change?"}
     D -- no --> X
-    D -- yes --> S{"An independent skeptic agent<br/>tries to refute the result"}
-    S -- refuted --> X
-    S -- holds --> P["Promote: results/CHAMPION, submissions/READY.zip<br/>Upload as the new live version<br/>(never in the 60 min before a tournament lock)"]
+    D -- yes --> H{"(e) Also beats the old v2 bot tb_merge_b:<br/>at least 82 of 140, and no more than<br/>8 below the champion's score there?"}
+    H -- no --> X
+    H -- yes --> S{"(f) Does the result survive<br/>an independent skeptic agent?"}
+    S -- no --> X
+    S -- yes --> P["Promote: results/CHAMPION, submissions/READY.zip<br/>Upload as the new live version<br/>(never in the 60 min before a tournament lock)"]
 ```
 
-The gate's noise was calibrated with "placebo" bots that change nothing. They score 66-68 wins out of 140 against an even 70. So passing at 82 isn't luck. Even so, local wins don't guarantee ladder wins, so the live bot's real record is monitored after every promotion.
+(a) uses all 70 maps from both sides; 82/140 is the smallest score whose 95% Wilson lower bound is above 50%. (e) guards against gains that exist only when our bots play each other. The gate's noise was calibrated with "placebo" bots that change nothing. They score 66-68 wins out of 140 against an even 70. So passing at 82 isn't luck. Even so, local wins don't guarantee ladder wins, so the live bot's real record is monitored after every promotion.
 
 ## 4. How each note is written
 
 ### 4.1 Real-match note: one folder per match (the 5 games against one team)
-`ians linux bot/results/real-matches/<YYYY-MM-DD>_<HHMM UTC>_<opponent>_<id>/notes.md` ([template](ians%20linux%20bot/results/real-matches/TEMPLATE.md))
+`ians linux bot/results/real-matches/<YYYY-MM-DD>_<HHMM UTC>_<opponent-slug>_<group8>/notes.md`, where group8 is the first 8 characters of the match-group id ([template](ians%20linux%20bot/results/real-matches/TEMPLATE.md))
 
 ```mermaid
-flowchart LR
-    A["1. The games played<br/>(brief, against this exact team)"] --> B["2. Their strategy<br/>compared with ours"]
-    B --> C["3. Which strategy was superior<br/>(given the results), and what we learn"]
-    C --> D["4. Weaknesses exposed,<br/>with code and hypotheses"]
+flowchart TB
+    A["Part 1: the games played<br/>(brief, against this exact team)"] --> B["Part 2: their strategy<br/>compared with ours"]
+    B --> C["Part 3: which strategy was superior<br/>(given the results), and what we learn"]
+    C --> D["Part 4: weaknesses exposed,<br/>with code and hypotheses"]
     D --> E[("INSIGHTS.md<br/>WEAKNESSES.md")]
 ```
 
 ### 4.2 Simulated-match note: one folder per test
-`ians linux bot/results/simulated-matches/<YYYY-MM-DD>_<HHMM UTC>_<candidate>/notes.md` ([template](ians%20linux%20bot/results/simulated-matches/TEMPLATE.md))
+`ians linux bot/results/simulated-matches/<YYYY-MM-DD>_<HHMM UTC>_<candidate>/notes.md`, created by `tools/new_sim_note.py` when the test is launched ([template](ians%20linux%20bot/results/simulated-matches/TEMPLATE.md))
 
 ```mermaid
-flowchart LR
-    P["1. The previous simulated match,<br/>analysed in the real-match format"] --> H["2. The new hypothesis, and the evidence<br/>(real and simulated) that it has promise"]
-    H --> T["3. The test<br/>(setup, commands, results)"]
-    T --> A["4. This match, analysed<br/>in the same format"]
-    A --> V["5. Verdict and<br/>next hypotheses"]
+flowchart TB
+    P["Part 1: the previous (parent) simulated match,<br/>analysed in the real-match format"] --> H["Part 2: the new hypothesis, the evidence<br/>(real and simulated) that it has promise,<br/>and a prediction"]
+    H -- "parts 1-2 are committed before any game runs" --> T["Part 3: the test<br/>(setup, commands, results)"]
+    T --> A["Part 4: this match, analysed<br/>in the same format"]
+    A --> V["Part 5: verdict and<br/>next hypotheses"]
 ```
 
-The notes chain together. Each simulated note starts by analysing the match before it, and cites the real-match notes behind its hypothesis:
+The notes chain together. Each simulated note starts by analysing its **parent**: the finished simulated match it builds on, usually the current champion's gate match or the experiment it refines. Several experiments can share a parent. Each note also cites the real-match notes behind its hypothesis, and `simulated-matches/INDEX.md` shows every note's parent.
 
 ```mermaid
 flowchart LR
-    R1["Real match:<br/>we lose to X"] -- "weakness" --> S2
-    S1["Simulated match N-1"] -- "analysed in section 1" --> S2["Simulated match N:<br/>hypothesis fixing X"]
-    S2 -- "verdict + new hypotheses" --> S3["Simulated match N+1"]
+    R1["Real match:<br/>we lose to X"] -- "weakness, cited in part 2" --> S2
+    S1["Parent simulated match<br/>(e.g. the champion's gate match)"] -- "analysed in part 1" --> S2["Simulated match:<br/>hypothesis fixing X"]
+    S2 -- "verdict + new hypotheses" --> S3["Next simulated match"]
     S2 -- "if it passes the gate" --> LIVE["New live bot"]
     LIVE -- "plays" --> R2["Real match:<br/>did X get better?"]
 ```
@@ -173,5 +180,7 @@ ians linux bot/
 - Useful commands, from `ians linux bot/`:
   - `python3.12 tools/ladder_pull.py`: fetch new ladder games and print the record per version.
   - `python3.12 tools/scout.py --group <id>`: profile both teams in a real match.
+  - `python3.12 tools/unscouted.py --claim`: list and claim the real matches that still need a note.
+  - `python3.12 tools/new_sim_note.py CAND --vs CHAMP --prev PARENT`: start a simulated-match note before its test.
   - `python3.12 tools/organize_notes.py`: tidy the note folders and rebuild both indexes.
   - `tools/onslurm.sh -c 24 -m 16G -t 00:20:00 -J gate -- python3.12 tools/eval.py CAND CHAMP --maps all --jobs 16`: a 140-game head-to-head.

@@ -37,18 +37,21 @@ Team repo for Cambridge Battlecode 2026a ("cambc", https://2026a.battlecode.co.u
     2. their strategy vs ours;
     3. which strategy was superior and what we learn;
     4. our weaknesses and hypotheses.
-  - Fold the notes into the short, rewritten-not-appended `results/real-matches/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`) and `WEAKNESSES.md`.
+  - Fold the notes into the short, rewritten-not-appended `results/real-matches/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`, at most 150 lines) and `WEAKNESSES.md` (at most 25 open rows).
+  - STRATEGIES.md keeps one ranked queue (no append-only sections).
   - The workflow, with flowcharts, is in the repo README; keep the README in sync when the process changes (user, 1 Nov).
   - Prioritise hypotheses from these insights.
   - **Keep learning from simulated matches too.** Self-play experiments, their analysis sessions and the gate continue alongside. The user only asked to prioritise real matches, not to drop self-play (1 Nov).
 - **Always keep a ready-to-submit best bot:** `results/CHAMPION`, `submissions/READY.zip` and `results/READY.md`.
   - Look actively for improved candidates. A screen result of ≥ 55% vs the champion goes straight to the full gate.
   - Upload a promoted bot right away, so the live bot is always our best.
-- **A submission must be *certain* to outperform the current bot.** The LOOP.md §4 gate:
+- **A submission must be *certain* to outperform the current bot.** The LOOP.md step-4 gate:
   - ≥ 82/140 on `--maps all` (95% Wilson lower bound above 50%);
   - a paired gauntlet ≥ the champion's;
   - a clean release-mode run;
-  - an analysis that confirms the mechanism.
+  - an analysis that confirms the mechanism;
+  - (e) ≥ 82/140 vs the old v2 bot `tb_merge_b`, and no more than 8 below the champion's score there (guards against self-play blind spots);
+  - (f) a pass from an independent skeptic agent.
 
   Never ship 55% near-misses or untested last-minute candidates. Freeze uploads in the last 60 min before a tournament lock.
 - **Uploads that pass the gate are pre-authorised.** Ask the user before anything else that changes the team account (eligibility, team settings, `match-groups create`, which uses the team's shared quota).

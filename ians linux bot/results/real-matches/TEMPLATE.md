@@ -1,6 +1,6 @@
 # Real-match note template
 
-One folder per ladder match: the 5 games we played against one team in one match group. The folder is named `<YYYY-MM-DD>_<HHMM UTC of the first game>_<opponent-slug>_<group id, first 8 characters>/`, and holds a single `notes.md` laid out as follows. Copy everything below the line.
+One folder per ladder match: the 5 games we played against one team in one match group. The folder is named `<YYYY-MM-DD>_<HHMM UTC of the first game>_<opponent-slug>_<group8>/`, where group8 is the first 8 characters of the match-group id. Use the exact name `tools/unscouted.py` prints. It holds a single `notes.md` laid out as follows. Copy everything below the line.
 
 ---
 
@@ -31,10 +31,11 @@ A brief description of exactly what happened in each game of this match against 
 | Adaptation across the 5 maps | | |
 
 ## 3. Which strategy was superior, and what we learn
+- **Overall (<W>-<L>):** in one sentence, whose strategy was superior over the 5 games, and whether the result came from strategy or from execution and bugs.
 - **Per game:** whose approach won, why, and by how much. Give numbers: gold, clears, kills, gem race at r250/r500/r1000.
 - **Lessons:** what this match teaches about our bot.
 - **Where our approach was better:** what to keep.
 
 ## 4. Weaknesses exposed and hypotheses for the testing pipeline
-| Weakness | Evidence (game, round, numbers) | Impact (decisive / major / minor) | Code responsible (live bot `src/bot.py`) | Testable hypothesis (keyed on structure, never on map or team names) |
+| Weakness | Evidence (game, round, numbers) | Impact (decisive / major / minor) | Code responsible (in the bot that played, `bots/<bot>/src/bot.py`) | Testable hypothesis (keyed on structure, never on map or team names) |
 |---|---|---|---|---|

@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-31T22:32:56.380Z
 ---
 
-At all times keep the improvement loop going. **Every simulated match must test a new, meaningful, distinct strategy** (from ladder-match research, our own bots or postmortems). Never simulate just to simulate; no idle soak runs. **Every experiment ends in a detailed analysis session** (tools/analyze_match.py: gem race, tempo, deaths/killers, per-champion lines, replay stdout), a written report in results/experiments/, and new hypotheses fed back into STRATEGIES.md. The user calls this the critical learning process. Submit the strongest bot found. Keep these running in parallel:
+At all times keep the improvement loop going. **Every simulated match must test a new, meaningful, distinct strategy** (from ladder-match research, our own bots or postmortems). Never simulate just to simulate; no idle soak runs. **Every experiment ends in a detailed analysis session** (tools/analyze_match.py: gem race, tempo, deaths/killers, per-champion lines, replay stdout), a notes.md in its own results/simulated-matches/<date>_<HHMM>_<cand>/ folder, and new hypotheses fed back into STRATEGIES.md. The user calls this the critical learning process. Submit the strongest bot found. Keep these running in parallel:
 - strategy experiments of our own: one candidate bot per hypothesis from `results/STRATEGIES.md`, with verdicts recorded;
 - monitoring of the leaderboard and our ladder matches on https://2026a.battlecode.co.uk;
 - submitting improved bots to the site ahead of every tournament or qualifier deadline.
