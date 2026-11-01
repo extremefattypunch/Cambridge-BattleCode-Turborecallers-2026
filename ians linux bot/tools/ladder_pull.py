@@ -13,7 +13,9 @@ Ratings come from `cambc ladder` at pull time, so `opp_rating` is the opponent's
 `our_rating_after` is our current rating (exact only for the newest set). Then prints ladder_log.py's summary.
 Games carry no submission id, and an upload stays `queued` until verified, so the bot version of a game is
 the newest version whose ACTIVATION time is before it. Activation times live in results/ladder-versions.json;
-a version is recorded the first time a pull sees it active, using its `statusAt` (when it became active).
+a version is recorded the first time a pull sees it active. Its activation time is when the previously live version
+went inactive (that version's `statusAt`); the new version's own `statusAt` can be refreshed later, so it only
+serves as a fallback.
 """
 import argparse
 import json
@@ -21,6 +23,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
@@ -44,7 +47,9 @@ def activations(subs):
     acts = json.load(open(VERSIONS)) if os.path.exists(VERSIONS) else {}
     for s in subs:
         if s["active"] and str(s["version"]) not in acts:
-            acts[str(s["version"])] = s["statusAt"]
+            prev = max((int(v) for v in acts), default=None)
+            prev_sub = next((p for p in subs if p["version"] == prev and not p["active"]), None)
+            acts[str(s["version"])] = prev_sub["statusAt"] if prev_sub else s["statusAt"]
             with open(VERSIONS, "w") as f:
                 json.dump(acts, f, indent=1)
     return acts
@@ -94,8 +99,12 @@ def main():
                 side = me["side"].upper()
                 path = os.path.join(OUT, f"{m['matchId']}__{side}.json")
                 if not os.path.exists(path):
-                    proc = subprocess.run([CAMBC, "matches", "summary", m["matchId"], "--json", "-o", path],
-                                          capture_output=True, text=True)
+                    for attempt in range(6):  # the site rate-limits summary downloads (HTTP 429)
+                        proc = subprocess.run([CAMBC, "matches", "summary", m["matchId"], "--json", "-o", path],
+                                              capture_output=True, text=True)
+                        if proc.returncode == 0 or "429" not in proc.stderr:
+                            break
+                        time.sleep(2 + 3 * attempt)
                     if proc.returncode != 0:
                         print(f"skip {m['matchId']}: summary failed: {proc.stderr.strip()[-200:]}")
                         continue
