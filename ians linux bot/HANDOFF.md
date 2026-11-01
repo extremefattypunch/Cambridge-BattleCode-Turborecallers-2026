@@ -55,6 +55,7 @@ Conclusion: tb_splitfarm (64%) was chosen as the improvement base. tb_aggro (62%
 | v1 | tb_splitfarm (= sf_base) | interim; split-map farmer with TP crystal crossing. Verified on the platform | 31 Oct 19:31 UTC |
 | v2 | **tb_merge_b** | final Sprint 3 bot: splitfarm + fight/flee, banking, pvp focus/locks, meta draft, fuel cache. Selected for the next match | 31 Oct 21:42 UTC |
 | v3 | **q24_combo** | tb_merge_b + lock memory, gold tiebreak, group fights, fuel cache. Full gate pass: 87/140 vs tb_merge_b, gauntlet 174/200 (`results/experiments/2026-11-01-q24_combo.md`) | 1 Nov 01:24 UTC |
+| v4 | **c2_respawn** | q24_combo + respawn-rule freeze fix. Full gate pass: 89/140 vs q24_combo, gauntlet 177/200, 98/140 vs tb_merge_b (`results/experiments/2026-11-01-c2_respawn.md`) | 1 Nov 04:36 UTC |
 
 `sf_bank` was bundled as an interim upgrade but never uploaded: browser access to the site dropped for a while, and the merge finished first. Zips are in `submissions/` (gitignored).
 

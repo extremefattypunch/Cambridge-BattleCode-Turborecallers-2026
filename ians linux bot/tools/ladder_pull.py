@@ -12,10 +12,12 @@ Needs a `cambc login` session. For every finished ranked game not yet in results
 Ratings come from `cambc ladder` at pull time, so `opp_rating` is the opponent's CURRENT rating and
 `our_rating_after` is our current rating (exact only for the newest set). Then prints ladder_log.py's summary.
 Games carry no submission id, and an upload stays `queued` until verified, so the bot version of a game is
-the newest version whose ACTIVATION time is before it. Activation times live in results/ladder-versions.json;
-a version is recorded the first time a pull sees it active. Its activation time is when the previously live version
-went inactive (that version's `statusAt`); the new version's own `statusAt` can be refreshed later, so it only
-serves as a fallback.
+the newest version activated by the time the game FINISHED (the set in progress at a switch already plays the new
+version: seen at both the v1->v2 and v2->v3 switches, confirmed by v3's fuel-exhaustion fingerprint). Activation times
+live in results/ladder-versions.json. A version is recorded the first time a pull sees it active, at the moment the
+previously live version went inactive (that version's `statusAt`); the new version's own `statusAt` is refreshed
+later, so it is only a fallback. Every row since CLI_SINCE is re-derived on each run, so late-known activations
+relabel old rows; earlier rows came from the site API with authoritative versions.
 """
 import argparse
 import json
@@ -34,6 +36,7 @@ if not os.path.exists(CAMBC):
     CAMBC = os.environ.get("CAMBC") or shutil.which("cambc") or CAMBC
 OUT = os.path.join(ROOT, "matches", "ladder", "summary")
 VERSIONS = os.path.join(ROOT, "results", "ladder-versions.json")
+CLI_SINCE = "2026-10-31T23:45"  # rows before this were logged from the site API with exact versions
 
 
 def cli_json(*args):
@@ -53,6 +56,25 @@ def activations(subs):
             with open(VERSIONS, "w") as f:
                 json.dump(acts, f, indent=1)
     return acts
+
+
+def version_at(acts, finished):
+    live = [int(v) for v, t in acts.items() if t <= finished]
+    return max(live) if live else None
+
+
+def relabel(acts):
+    rows = [json.loads(l) for l in open(LOG) if l.strip()]
+    changed = 0
+    for r in rows:
+        if (r["time"] or "") >= CLI_SINCE:
+            v = version_at(acts, r["time"])
+            changed += v != r["v"]
+            r["v"] = v
+    if changed:
+        with open(LOG, "w") as f:
+            f.writelines(json.dumps(r) + "\n" for r in rows)
+        print(f"relabelled {changed} games by version activation time")
 
 
 def ratings():
@@ -112,8 +134,7 @@ def main():
                 gems = {t["team"]: int(t["submittedGems"]) for t in st["teams"]}
                 us_team = "team" + side
                 them_team = "teamB" if side == "A" else "teamA"
-                live = [int(v) for v, t in acts.items() if t <= m["createdAt"]]
-                version = max(live) if live else None
+                version = version_at(acts, m["finishedAt"])
                 row = {"id": m["matchId"], "group": m["groupId"], "time": m["finishedAt"], "v": version,
                        "opp": op["name"], "opp_rating": round(rating.get(op["teamId"], 0)),
                        "our_rating_after": round(rating.get(ME, 0)), "map": m["map"], "side": me["side"],
@@ -125,6 +146,8 @@ def main():
                 seen.add(m["matchId"])
                 print(f"+ {row['time'][:16]} v{version} {row['res']:4s} {row['us']:5}-{row['them']:<5} "
                       f"{row['map']:22s} vs {row['opp'][:20]} ({row['opp_rating']})  {path}")
+    if os.path.exists(VERSIONS):
+        relabel(json.load(open(VERSIONS)))
     sys.stdout.flush()
     subprocess.run([sys.executable, os.path.join(ROOT, "tools", "ladder_log.py")])
 

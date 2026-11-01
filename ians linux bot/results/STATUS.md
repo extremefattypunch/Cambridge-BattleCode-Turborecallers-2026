@@ -1,12 +1,12 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-11-01 00:35 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
-- **Champion / live bot:** `q24_combo` (Python), uploaded as website **v3** at 01:24 UTC on 1 Nov after a full gate pass (87/140 vs tb_merge_b, gauntlet 174 vs 158; `results/READY.md`). Confirm v3 shows Active / Verified on the next ladder pull. The previous bot `tb_merge_b` (v2) was our Sprint 3 entry.
-- **Ladder (pulled 1 Nov 04:10 UTC):** **v3 (q24_combo) went live at 01:42 UTC** (when v2 was deactivated; v3's own `statusAt` was refreshed later, so it misled).
-  - **v3 is 28W-32L (47%), rating ~1,520**, against opponents rated ~1,500-1,575. It lost 0-5 to Mein Kraft (1,532), including 02treasure_box 0-1002.
-  - v2's comparable recent window was 21-9 (70%) against ~1,490-1,530. All of v2 is 87W-48L.
-  - v3 still loses 02treasure_box (3 more times); its 0-0 gold play won 02the_pack but lost 01boss_battle to AI Coliseum.
-  - **Workflow `battlecode-v3-ladder-study`** (launched 00:15 EDT) asks: is v3 really worse, and why?
+- **Last update:** 2026-11-01 00:40 EDT: **c2_respawn promoted and uploaded as website v4**. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), uploaded as website **v4** at 04:36 UTC on 1 Nov after a full gate pass plus a skeptic pass (`results/READY.md`). v3 (q24_combo) stays live until v4 is verified.
+- **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/experiments/2026-11-01-v3-ladder-study.md`) found:
+  - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
+  - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
+  - Fuel caching, gold play and lock memory are confirmed working on real games.
+  - Decision: keep v3, and require successors to also beat tb_merge_b locally (c2: 98/140).
   - By team size: 3-pick 13/19, 4-pick 23/28, 5-pick 38/63.
   - New loss patterns: **02gift_wrapping** (0 clears all game, lost 0-1028 and 16-1006: Q26); **02treasure_box** (0 tributes, lost 0-1002 and 163-1005: Q27); **7 close races** where the opponent hit ~1000 first (Q28); 0-0 gold tiebreaks on 01boss_battle and 02guardians (h_goldtie's target).
   - CLI login done 1 Nov ~01:00 UTC; it **expires ~7 Nov**. Ladder statistics are in `matches/ladder/summary/<id>__<our side>.json` (feed `tools/analyze_match.py` directly).
@@ -30,19 +30,10 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - **Login-node rules:** run no games locally, not even a single debug game; send them through `tools/onslurm.sh -c 2 -m 2G -t 00:05:00 -J dbg -- ./cli/cambc run ...`. Long analysis scripts also go through onslurm.
 
 ## In progress
-- **Workflow `battlecode-batch3`** (launched ~21:28 EDT):
-  - **c2_respawn** = q24_combo + respawn fix: merge, review, gate vs q24_combo;
-  - **placebo** noise-floor calibration;
-  - **Q30**: q24's large-map regression (h_bigmap).
-- **Workflow `battlecode-batch4`** (launched ~22:35 EDT):
-  - **c3_teamclear** = q24_combo + Q26 team bootstrap: merge, review, gate vs q24_combo;
-  - **Q27-refined** spawn-heal-aware fighting (h_spawnheal).
-- **Batch 3 results so far:**
-  - **Placebo: the gate is sound.** Null changes scored 66 and 68 out of 140 vs q24_combo (the mirror scores 70), and 85 and 90 vs tb_merge_b, like q24's 87.
-  - **c2_respawn passed gate (a)-(d):** 89/140 vs q24_combo (LB 0.553) and gauntlet 177 vs 174. The skeptic is running.
-  - **h_bigmap: 80/140**, so it fails the gate; it is kept as a merge component.
-  - **Upload hold:** c2's evidence is all relative to q24_combo, which the ladder is questioning (v3 47% vs v2 70%). No upload until the v3 ladder study concludes.
-- After both: if c2 and c3 each pass, build **c4 = q24 + respawn fix + team clear** and gate it against the new champion.
+- **Workflow `battlecode-batch4`:**
+  - **c3_teamclear** = q24_combo + Q26 team bootstrap, gated vs q24_combo;
+  - **Q27-refined** h_spawnheal.
+  - Next: **c4 = c2_respawn + team clear** (and a fix for c2's 3-pick mirror-draft regression), gated vs c2 **and** vs tb_merge_b.
 
 ## Done this session
 - **Champion gauntlet baseline:** `tb_merge_b` **158/200** on sprint maps. In `results/gauntlet.jsonl`.
