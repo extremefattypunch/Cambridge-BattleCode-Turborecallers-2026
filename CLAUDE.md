@@ -72,6 +72,10 @@ The CLI version must match the platform engine (4.0.0 / engine 2.0.0 on 31 Oct 2
 - Use `python3.12` for the tools; the system `python3` is 3.6.
 - `cli/cambc` and `matches/`/`replays/` are symlinks into holylabs and netscratch.
 - Run every eval through `tools/onslurm.sh`. It uses the free `test` partition, the only lane the user allows.
+- From 1 Nov the agent runs on a **login node**, where FASRC allows no computation and kills long processes.
+  - Run **every** game through `tools/onslurm.sh`, including a single debug game (`tools/onslurm.sh -c 2 -m 2G -t 00:05:00 -J dbg -- ./cli/cambc run A B --map M -o matches/<dir>`).
+  - Any script that needs more than about a minute of CPU also goes through `tools/onslurm.sh`.
+  - Only editing, git, `sbatch`/`squeue`, `cambc` site commands and quick reads run locally.
 
 ## Rules of the road
 - **Local games are deterministic:** the same bots on the same map give identical games. Never re-run a map; get evidence from more maps (`--maps all` = 140 games).

@@ -14,6 +14,17 @@
 - **All evals run on the free Slurm `test` partition** via `tools/onslurm.sh -c 24 -m 16G -t 00:20:00 -J <name> -- python3.12 tools/eval.py ... --jobs 16`. It runs from a node-local snapshot, because builds rewrite `bot.wasm` in place and parallel jobs would race. A 140-game `--maps all` run takes ~4 min. The user allows only free lanes (`test`, `gpu_test`).
 - Determinism holds across machines: the cluster reproduced the dev-PC gauntlet numbers exactly.
 
+## Session restart checklist (the agent runs on a login node from 1 Nov)
+The session-only cron tick and any running workflows die whenever the Claude process ends: the OOD job ending, a login-node reboot, or FASRC killing a long process. Files on disk survive.
+- **Restart** (user, in tmux on a login node; note `hostname` so you can `ssh` back and `tmux attach -t cambc`):
+  `tmux new -s cambc`, then `cd /n/home05/ianpoon/Cambridge-BattleCode-Turborecallers-2026 && claude --resume 5245ba49-8b5b-4d9a-9345-708126bcbea8 --permission-mode auto`
+  Only one process may hold the session, so start it after the old one has ended.
+- **The resumed agent must:**
+  1. Re-create the tick with CronCreate (`17,47 * * * *`, using the LOOP TICK prompt from the conversation; login-node rule: every game goes through `tools/onslurm.sh`).
+  2. Check `squeue -u $USER -p test` and `results/experiments/` for the work the interrupted workflows finished.
+  3. Relaunch what is missing.
+- **Login-node rules:** run no games locally, not even a single debug game; send them through `tools/onslurm.sh -c 2 -m 2G -t 00:05:00 -J dbg -- ./cli/cambc run ...`. Long analysis scripts also go through onslurm.
+
 ## In progress
 - **Workflow `battlecode-batch3`** (launched ~21:28 EDT):
   - **c2_respawn** = q24_combo + respawn fix: merge, review, gate vs q24_combo;
@@ -36,7 +47,7 @@
   - Q27 h_treasure inconclusive (72/140): the mechanism was confirmed but regressions cancelled it.
   - Q28 h_tempo rejected (75/140).
   - Noise warning: identical logic under another bot name replayed only 26 of 40 games identically.
-- **Agent relay** (`tools/agent_relay.sbatch`, `tools/agent_attach.sh`): it keeps this session alive past the 12 h job cap on the free test partition. Dry runs and a live `claude --resume` test passed. **Not armed**; waiting for the user's go-ahead.
+- **Agent relay** (`tools/agent_relay.sbatch`): built and tested, but **not used**. The user chose to run the agent on a login node instead (1 Nov).
 
 ## Resume here (in order)
 1. **c2 = q24_combo + h_respawnfix:** merge, review and gate vs q24_combo; also the placebo calibration and Q30 (q24's large-map regression).
