@@ -43,6 +43,14 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - Untracked compatibility symlinks in `results/experiments/` (and `TEMPLATE.md` there) exist only for workflows started before the move. Delete them once batch 6, batch 7 and both scouting workflows have finished.
 
 ## In progress
+- **Batch 6: c4_fallback failed gate (a), 78/140 vs c2** (LB 0.474). Hedge 99/140 vs tb_merge_b; gauntlet 177 = 177.
+  - It fixes 02gift-wrapping (W 1032-0; beats starter-python where c2 loses 0-80), but the fallback fires in only ~10 games.
+  - Kept as a component.
+- **Batch 7, h_antifocus kept as a component.** A new imitation `imit_uvt2` reproduces the Us V Them ladder losses: c2 scores 76/140 against it, h_antifocus 105/140 (+37/−8 paired). vs c2 74/140; vs tb_merge_b 104/140. h_snowball is still running.
+- **Workflow `battlecode-batch8-c5`** (launched ~09:40 UTC): **c5_combo** = c2 + 3-pick fix + 01shortcut fix + anti-focus + dormant gift-wrapping fallback.
+  - This is the first simulated match in the new note format: sections 1-2 were pre-registered before the test.
+  - It runs the full gate (a)-(f) plus per-component attribution and the vs imit_uvt2 check.
+- **Open question for the user:** scoped fixes cannot reach 82/140 head-to-head by construction (they leave most games identical). The options are to keep bundling them into combos (current practice) or to add a targeted-fix gate path. This changes the gate, so it is the user's decision.
 - **Workflow `ladder-scout`** (09:06 UTC): 6 newest matches (67 0-5, THE THINK TANK 2-3, Sloppy Joe Pirates 3-2, slop 1-4, Babapro31 2-3, VeryHotKimchi 4-1), claimed. About 14 more matches since 05:42 UTC are still to scout; the next ticks take them.
 - **Workflow `strategies-consolidate`**: folds STRATEGIES.md into one ranked queue; the original goes to `results/strategies-archive.md`.
 - The OOD session ends 07:13 EST. Restart on a login node per the checklist above.
