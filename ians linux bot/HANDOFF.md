@@ -1,6 +1,6 @@
 # Handoff: Turbo Recallers Python bot (cambc 2026a)
 
-_Last updated: 2026-10-31 ~17:45 EDT, after the Sprint 3 submission (lock 23:59 GMT = 19:59 EDT). Written for the next Claude agent, e.g. one running overnight improvement loops._
+_Last updated: 2026-10-31 ~20:15 EDT, at the handoff from the dev PC to the cluster agent. This is the history and reference document. **For what to do next, start at `results/STATUS.md` → "Resume here" and the protocol in `LOOP.md`.** The standing user instructions are in the repo-root `CLAUDE.md`._
 
 ## 1. Where things stand
 - **Live submission:** `tb_merge_b` (website v2) is selected for Sprint 3; see §3. The current champion bot is named in `results/CHAMPION` (= `tb_merge_b`).
@@ -8,7 +8,7 @@ _Last updated: 2026-10-31 ~17:45 EDT, after the Sprint 3 submission (lock 23:59 
 - **Ladder context** on 31 Oct: 815 ranked teams. The top 10 are almost all C++, rated about 2,300–2,650.
 - **Reality check from the real ladder:** v1 (`tb_splitfarm`) went from 1,500 to **1,410** over its first 13 ranked match sets on 31 Oct. It won **3 sets and lost 10**, with five 0–5 losses against teams rated about 1,400–1,500 (FürFortnite, LigaSiur, Hammer Method, Patient Wolves, mostly harmless).
   - It beat the starter 100% locally, so **our local self-play numbers overstate real strength a lot.**
-  - `tb_merge_b` (v2) beats v1 92% locally, but its real ladder performance is unknown as of this writing. Check `/game/matches` or `cambc matches`.
+  - `tb_merge_b` (v2) then went **43W-17L** (72%) on the ladder, rating 1,407 → ~1,491 (plateau). Weak spots: 3-pick maps (6/12), 0-0 gold tiebreaks (02the_pack), and **mirror-meta teams at ~1,500** that play our exact draft better. Details: `results/ladder-analysis-2026-10-31.md`, `results/ladder-games.jsonl`.
 - **Our bot lineage:**
   1. `starter-python`, the official starter. It dies about 28–35 times per game.
   2. Builder round: four independent designs. NOTES.md in each bot dir explains its design and lists hard-won engine facts. Results on 20 sprint maps × both sides vs starter-python:
@@ -88,23 +88,13 @@ Round-robin among the merges (`results/roundrobin-merges-2026-10-31.txt`): **tb_
 **Robustness check on all 70 local maps × both sides vs sf_bank:** `125W-15L (89%)`, avg gems 840 vs 251, deaths 6.5 vs 16.4, botFaults 0. Metrics: mean tribute 27.0, camp deaths 1.0/game, fuelExhausted 81.5/game, 380 wards/game, 7.4 consumables/game. Log: `matches/final-mergeb-all.log` (gitignored).
 
 ## 5. Known weaknesses and next steps (prioritised)
-Postmortem items 1–5 (fuel, banking, meta draft, Bruiser items, PvP focus/locks/wards) are now **in `tb_merge_b`**. What remains, roughly by expected value:
-0. **Learn from real ladder losses first.** This is the biggest blind spot (see §1).
-   - Download our ranked matches with `cambc matches` (after `cambc login`), or the replay ZIPs from the site.
-   - Run `./cli/cambc summary <file>` / `--statistics` for JSON. The `events` include death killers, gemLoss and gemSubmission.
-   - Compare drafts, gem curves, deaths and kills against the teams that beat us 0–5.
-   - Consider building local "imitation" opponents of the strategies that beat us. A local pool made only of our own bots can't reveal these weaknesses.
-1. **0–0 maps lost on the tiebreak.** Five of the 15 losses on the 70-map check were 0–0 at round 2000: 01boss-battle, 02guardians, 02gift-wrapping, 02the-pack, 01yellow-brick-road. The tiebreak is **lifetime gold earned, then kills, then Team B**.
-   - Detect "no gems reachable or safe" early, then deliberately maximise gold (gold clusters, kills, Vesper's +33% gold).
-   - Or crack the gate as a team. `sf_maps` has gate/herd detection code (`src/mapprofile.py`) and a partly working gated-altar assault (02guardians side A won 4 out of 4 in isolation).
-2. **Real opponents.** Everything so far is self-play within our bot family. The aggressive pvp bias (engage ratios up to ~1.75 against channelling carriers) may backfire against bots that cancel a tribute and fight back. Watch our ladder matches (`cambc matches`, or /game/matches on the site) and replays; consider `cambc match-groups` vs strong teams. Note it uses the team's shared quota.
-3. **Residual fuel exhaustion**, about 80 per game, concentrated on 00lanes (~650 per game) and 01islands. It comes from `observe`/`threats` and from fight code during big brawls. Add fuel guards there.
-4. **Draft for 5-pick maps.** HoR is our weakest farmer (sf_draft measured ~6–8k monster damage vs 15–24k for others). `tb_merge_c`'s experiment (Ryth 4th, Varg 5th, HoR 6th) went 14W-6L vs 8W-12L on the 4/5-pick maps. Worth an A/B on tb_merge_b, or improve HoR's farming instead.
-5. **01concentrated-wealth** was lost on both sides by every merge; investigate with `--keep` replays.
-6. **Stand-offs** (both teams frozen, e.g. 02the-pond side B, 00vault side B). Mutual chase/retreat loops; the chase guard and stall breaker help but don't eliminate them.
-7. **Ideas not yet tried:** carry concentration (route captures to Vesper/Marcella), alert-triggered regrouping (top-20 habit), the Capture emblem for faster captures, and smarter ward placement that feeds enemy sightings into shared memory (byte 6 is free).
+**Superseded:** the live queue and verdicts are in `results/STRATEGIES.md`, and the immediate resume list is in `results/STATUS.md`. In short:
+1. **Q24 combined candidate:** the lock-memory bug fix + gold-tiebreak play + early-fight rule + fuel caching from strategy batch 1 (`results/experiments/2026-10-31-batch1-interim.md`). Build it, analyse it, gate it.
+2. **Learn from the real ladder (Q14, Q19):** download our losses (`cambc matches summary/download`), run `tools/analyze_match.py` on them, and find how the mirror-meta teams out-play us.
+3. **Map structure (Q20-Q22):** teleport into wolf-ringed altars, fix the respawn-rule freeze, rush open gates.
+4. **Fuel (Q25)** and the **C++ track** (`bots/cpp_port`, at parity, 0 exhaustions).
 
-## 6. Overnight improvement protocol (suggested)
+## 6. Overnight improvement protocol (superseded by `LOOP.md`; kept for reference)
 For reference, one 2000-round Python game took about 10–20 s of wall time on the 16-core dev PC (24-game eval with `--jobs 6` ≈ 50 s). Use `docs/CLI_ONLY.md` for the browser-free equivalents of site tasks.
 1. `CHAMP=$(cat results/CHAMPION)`. Copy it to a new bot: `python3 -I tools/newbot.py $CHAMP <cand>`, which copies it without its build cache and validates the names.
 2. Make **one** focused change, taken from §5 or from replay or metric analysis:

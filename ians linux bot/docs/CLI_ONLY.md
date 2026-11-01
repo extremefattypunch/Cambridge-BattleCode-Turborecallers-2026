@@ -6,8 +6,9 @@ Facts about the cambc tooling for an agent that has a shell but no browser. How 
 |---|---|
 | Local matches, evals, gauntlets | `tools/eval.py`, `tools/tournament.py`, `tools/gauntlet.py`, `cambc run` / `run-batch` |
 | Map pool refresh | `cambc maps pull` |
+| Our ladder games | `cambc matches list --team me --kind ranked --json [--limit N] [--cursor C]` (map, teams, drafts); `cambc matches show <id> --json`; `cambc matches summary <id> --json -o f.json` (statistics for `tools/analyze_match.py`; verify the format); `cambc matches download <id> -o DIR` (replay). Needs `cambc login` |
 | Real opponents | `cambc match-groups create` queues 5 unranked matches against other teams. It **uses the team's shared website quota** (check with `match-groups quota`). `match-groups download` fetches them. `cambc matches` lists and downloads our ladder matches. Needs `cambc login` |
-| Ladder | `cambc ladder` (needs login) |
+| Ladder | `cambc ladder --json [--page N --limit N]` (needs login) |
 | Submitting | `cambc submit <bot> -n "note"`, plus `cambc submissions list` / `activate <vN\|latest>`. Needs login and **user approval** |
 | Announcements, patch notes, eligibility | No CLI route. Ask the user |
 

@@ -1,11 +1,19 @@
-# Continuous improvement loop (runs 24/7 on the dev PC)
+# Continuous improvement loop (runs 24/7; moved from the dev PC to the cluster agent on 31 Oct)
 
 **Standing instructions from the user (31 Oct 2026):**
 - Keep improving all the time. Run our own simulated matches, monitor the leaderboard and our ladder matches, and submit to the site for every tournament and qualifier.
 - **Every simulated match must test a new, meaningful, distinct strategy** with improvement potential, drawn from research on our ladder matches, our own bots, or postmortems. Never simulate for its own sake.
 - **Our submission is always the strongest bot we have found.**
 
-A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**. CronCreate jobs are session-only and expire after 7 days, so re-create the job in each new session.
+Something must trigger one **tick** about every 30 min. On the dev PC this was a session-scheduled `CronCreate` job (session-only, expires after 7 days). On the cluster, use whatever keeps the agent running there: `/loop`, CronCreate, or an external scheduler. **Start with `results/STATUS.md` → "Resume here".**
+
+**Work that was running on the dev PC when it stopped** (all must be restarted by the cluster agent; nothing runs by itself):
+- the scheduled tick (this file);
+- strategy experiments with analysis sessions (batch 1 interrupted; see `results/experiments/2026-10-31-batch1-interim.md`);
+- the promotion gate for the best candidates (gate round 1 interrupted; nothing gated);
+- ladder tracking (needs `cambc login` on a CLI-only machine);
+- postmortem and ladder research (`postmortems/INSIGHTS.md`; Q14/Q19 replay studies pending);
+- the C++ port track (`bots/cpp_port`, at parity).
 
 - State: `results/STATUS.md`
 - Strategy backlog and verdicts: `results/STRATEGIES.md`
@@ -17,13 +25,21 @@ A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**
    - Read the next tournament lock from https://2026a.battlecode.co.uk/game/tournaments.
    - Record it in STATUS.md.
 2. **Ladder research** (real games are analysed too).
-   - In the logged-in Chrome tab, fetch `/api/v1/match-groups?scope=team`, then `/api/v1/match-groups/<id>` for any new groups.
-   - Save the responses as a list via the localhost receiver to `matches/ladder/raw/<name>.json`.
-   - Run `python3 -I tools/ladder_log.py matches/ladder/raw/<name>.json`. It appends the new games to `results/ladder-games.jsonl`, deduplicated by match id, and prints the record by version and team size plus the live version's losses.
+   - **Without a browser (cluster):** after a one-time `cambc login` by a human, use:
+     - `./cli/cambc matches list --team me --kind ranked --json --limit 50` lists our games (map, teams, drafts);
+     - `./cli/cambc matches summary <id> --json -o matches/ladder/<id>.json` gets a game's statistics, which should feed `tools/analyze_match.py`. Verify the format on the first one;
+     - `./cli/cambc matches download <id> -o ...` gets the replay;
+     - `./cli/cambc ladder --json` gets the standings.
+
+     See `docs/CLI_ONLY.md`. The site API JSON that `tools/ladder_log.py` expects is the `/api/v1/match-groups/<id>` response (`group` + `matches` with per-side `draft`, `score`, `result`). If `cambc matches` returns a different shape, adapt `tools/ladder_log.py` or write a small converter.
+   - **With a browser (dev PC):**
+     - in the logged-in Chrome tab, fetch `/api/v1/match-groups?scope=team`, then `/api/v1/match-groups/<id>` for any new groups;
+     - post the list to a localhost receiver, saving it to `matches/ladder/raw/<name>.json`;
+     - format JS output with `|` separators, because outputs that look like query strings are blocked;
+     - replay bundles (`/api/v1/matches/<id>/bundle`) are async: poll `pollUrl`.
+   - Then run `python3 -I tools/ladder_log.py matches/ladder/raw/<name>.json`. It appends the new games to `results/ladder-games.jsonl`, deduplicated by match id, and prints the record by version and team size plus the live version's losses.
    - Record the rating in STATUS.md.
-   - Turn each **new** loss pattern into a strategy hypothesis in STRATEGIES.md (opponent comp, map type, how they won).
-   - Format JS output with `|` separators (outputs that look like query strings are blocked).
-   - Replay bundles (`/api/v1/matches/<id>/bundle`) are async: poll `pollUrl`. Download them only for losses we want to study.
+   - Turn each **new** loss pattern into a strategy hypothesis in STRATEGIES.md (opponent comp, map type, how they won). Download replays only for losses we want to study, and run `tools/analyze_match.py` on their statistics.
 3. **Strategy experiments: hypothesis → test → detailed analysis → new hypotheses.** This is the core learning process. If fewer than about 2 experiment workflows are running, take the top untested items from the STRATEGIES.md queue and launch a workflow in which every strategy goes through all four stages:
    - **(a) Implement** the strategy in its own candidate bot (`tools/newbot.py <champion> <cand>`; never edit the champion).
    - **(b) Test** it against the champion, and against imitation opponents of real ladder comps when the hypothesis targets them (e.g. `imit_test`, `lad_*`). Use `tools/eval.py ... --keep`.
@@ -61,11 +77,11 @@ A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**
 5. **Promote and submit.**
    - Write `results/CHAMPION`.
    - Run `./cli/cambc bundle <bot> --output submissions/<bot>.zip`.
-   - Upload it at /game/submissions (file input, then a note, then Upload; retry on HTTP 503).
+   - Upload it: on the CLI, `cambc submit <bot> -n "<note>"` (needs `cambc login`); in a browser, /game/submissions (file input, then a note, then Upload; retry on HTTP 503). The user **pre-authorised** uploads of bots that pass the full gate.
    - Confirm the version turns **Active / Verified** on our next match.
    - Update HANDOFF.md §3.
    - **Freeze window:** no uploads in the last 60 min before a tournament lock unless the candidate already passed the full gate.
-6. **Commit and push** STATUS.md, STRATEGIES.md, `ladder-games.jsonl` and any promoted or tested bots to branch `ians-linux-bot`. Push needs the Bash sandbox disabled; retry, because GitHub was flaky.
+6. **Commit and push** STATUS.md, STRATEGIES.md, `ladder-games.jsonl`, experiment reports and any promoted or tested bots to branch `ians-linux-bot`, so teammates can follow. Raw `matches/` output is gitignored, so copy the key numbers into the experiment reports. On the dev PC, push needed the Bash sandbox disabled, and GitHub was intermittently flaky, so retry.
 
 `tools/soak.py` exists, but per the user's rule it is **not** run continuously. Use it only to test a specific hypothesis, for example "does candidate X fix our weak maps?".
 
@@ -73,4 +89,5 @@ A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**
 The user asked to move to C++ after Sprint 3. Measurements on 31 Oct:
 - The C++ starter uses about 19× less fuel than the Python starter, but its budget is 25× smaller. So C++ gives no compute headroom for code like ours.
 - Python therefore stays the main line.
-- The port (`bots/cpp_port`) goes through the same gate against the Python champion. Switch languages only if it wins.
+- **Status:** `bots/cpp_port` is a complete faithful port (~3,200 lines; `DESIGN.md` has the fuel benchmarks and design, `NOTES.md` the status). It plays at parity with the Python champion (sprint 20W-20L), with **0 fuel exhaustions** against Python's ~87/game. The independent verify/fix review never ran.
+- It goes through the same gate against the Python champion; switch languages only if it wins. Its fuel headroom makes it the natural home for compute-heavy ideas (e.g. Q25 cheaper sensing, deeper fight simulation).

@@ -1,0 +1,4 @@
+- [Cambridge Battlecode project](cambc-battlecode-project.md) — team Turbo Recallers, 'ians linux bot' workspace, eval harness, sprint dates
+- [Battlecode site scraping notes](cambc-site-notes.md) — blob-download capture, Chrome output filter, CLI URL
+- [Commit & push progress](commit-push-progress.md) — push milestones to branch ians-linux-bot for teammates; push needs sandbox off
+- [Continuous improvement loop](continuous-improvement-loop.md) — 24/7: local sims + ladder monitoring + submit validated bots; follow LOOP.md each tick

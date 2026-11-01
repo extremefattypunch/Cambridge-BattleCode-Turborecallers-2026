@@ -1,0 +1,59 @@
+--- a/src/bot.py
++++ b/src/bot.py
+@@ -106,6 +106,10 @@
+ KIT_RESET_RETARGET = True  # attack reset only with a live target; retarget if the first died
+ # h_3pick: pick_altar also skips altars remembered as enemy-locked (fixes the lock oscillation).
+ LOCK_MEMORY_FIX = True
++# v2: a remembered enemy-locked altar is not skipped but costs LOCK_BREAK_COST extra path tiles
++# (5 basic attacks); when it is still the chosen altar, do_tribute walks there and breaks the lock.
++LOCK_BREAK = True
++LOCK_BREAK_COST = 8
+ 
+ # ---- h_3pick (Q18): trio mode, active only when we field <= TRIO_MAX_BODIES champions (3-pick maps).
+ # With 3 bodies a pick-off is a third of the team and 60-75% of our deaths on 3-pick maps were
+@@ -1151,13 +1155,19 @@
+         # carriers for hundreds of rounds (01broken-curve, 02the-pond, 01the-farm).
+         mem = self.locked_altars() if LOCK_MEMORY_FIX else ()
+         for i, (a, goals) in enumerate(self.altar_goals):
++            pen = 0
+             if a in mem:
+-                continue
+-            try:
+-                if cambc.vision.has_altar_lock(a) and cambc.vision.altar_lock_at(a).is_enemy():
++                if not LOCK_BREAK:
+                     continue
+-            except Exception:
+-                pass
++                pen = LOCK_BREAK_COST
++            else:
++                try:
++                    if cambc.vision.has_altar_lock(a) and cambc.vision.altar_lock_at(a).is_enemy():
++                        if not LOCK_BREAK:
++                            continue
++                        pen = LOCK_BREAK_COST
++                except Exception:
++                    pass
+             d = BIG
+             sf = self.sfields.get(-2 - i) if self.sf_use else None
+             if sf is not None:
+@@ -1175,6 +1185,7 @@
+                 continue
+             if rnd - self.altar_seen.get(a, -BIG) <= 40:
+                 d += ALTAR_DANGER_PEN
++            d += pen
+             if d < best:
+                 best = d
+                 best_goals = goals
+@@ -1232,9 +1243,10 @@
+                     free.draw_chebyshev(a, 1)
+             free &= ~self.walk_block
+             reach_free = not (free & self.comp_of(pos)).is_empty()
+-            if self.break_lock(me, locked, not reach_free):
++            chosen_locked = LOCK_BREAK and pref is not None and self.pref_altar in locked
++            if self.break_lock(me, locked, not reach_free or chosen_locked):
+                 return True
+-            if reach_free:
++            if reach_free and not chosen_locked:
+                 ring = free
+         # sf_bank: preferred altar (pick_altar already skips enemy-locked ones)
+         if pref is not None and not (pref & ~self.blocked_now(me)).is_empty():
