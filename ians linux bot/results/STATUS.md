@@ -2,10 +2,10 @@
 
 - **Last update:** 2026-10-31 ~20:50 EDT. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `tb_merge_b` (Python), website **v2**, Active / Verified. It was our **Sprint 3 entry** (snapshot 31 Oct 23:59 UTC; Sprint 3 was seeding as of 00:30 UTC on 1 Nov).
-- **Ladder:** v2 is **43W-17L** (72%) over 12 sets. Rating ~**1,491**, a plateau around 1,490-1,497 as of 31 Oct 23:40 UTC. No new pull yet: the CLI on the cluster is **not logged in** (`cambc login` needs a human).
-  - By team size: 3-pick 6/12, 4-pick 14/16, 5-pick 23/32.
-  - Set losses at ~1,500 came against the **mirror meta comp** (Q19).
-  - Log: `results/ladder-games.jsonl` (125 games); summarise with `python3.12 -I tools/ladder_log.py`.
+- **Ladder (pulled 1 Nov ~01:10 UTC via `python3.12 tools/ladder_pull.py`):** v2 is **59W-31L** (66%). Rank 411, rating **1,497**. The latest 30 games went only 16-14.
+  - By team size: 3-pick 11/17, 4-pick 17/21, 5-pick 31/52.
+  - New loss patterns: **02gift_wrapping** (0 clears all game, lost 0-1028 and 16-1006: Q26); **02treasure_box** (0 tributes, lost 0-1002 and 163-1005: Q27); **7 close races** where the opponent hit ~1000 first (Q28); 0-0 gold tiebreaks on 01boss_battle and 02guardians (h_goldtie's target).
+  - CLI login done 1 Nov ~01:00 UTC; it **expires ~7 Nov**. Ladder statistics are in `matches/ladder/summary/<id>__<our side>.json` (feed `tools/analyze_match.py` directly).
 - **Upcoming locks:** International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov. Not yet listed in `/api/v1/tournaments` (only Sprints 1-3 were, at 00:30 UTC on 1 Nov). Recheck each tick.
 
 ## Cluster operating notes (31 Oct)

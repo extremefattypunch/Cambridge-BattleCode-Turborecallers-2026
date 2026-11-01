@@ -41,8 +41,13 @@ Champion: see `results/CHAMPION`.
 | T20 | C++ faithful port (cpp_port) | Q11 | sprint 20-20 vs the Python champion; 0 fuel exhaustions | parity reached; keep as a platform for compute-heavy ideas |
 
 ## Queue (highest expected value first; refine with each ladder pull)
+
+**Blind spot (1 Nov):** every local opponent (sf_*, tb_*, imit_*, lad_*, h3_*) runs our own farming and safety logic, so maps where *our logic* scores 0 look like 0-0 ties locally. Real opponents score 1000 there (Q26, Q27). Judge map-structure fixes by our own clears and tributes, not only by the local result.
 | # | Strategy hypothesis | Source | Why it might win |
 |---|---|---|---|
+| Q26 | **Clear wrapped/large camp groups as a team** (02gift_wrapping: we did 0 monster damage and 0 clears all game and lost 0-1028 and 16-1006, while opponents cleared 21 groups. Locally the map is 0-0 only because every local opponent shares our solo safety model) | Ladder pull 1 Nov 00:43 UTC | Turns a guaranteed loss into a race; any unseen map with big groups has the same blind spot |
+| Q27 | **02treasure_box failure**: 0 tributes in 995 rounds, 4 clears, 21 champion deaths, 112 fuelExhausted; lost 0-1002 and 163-1005. Diagnose locally (the map is in maps/ as 02treasure-box) and fix generally | Ladder pull 1 Nov | A structural zero on a ladder map |
+| Q28 | **Farming tempo in races at ~1,500**: 7 close losses where the opponent reached ~1000 first (00quadrants x2, 00rows, 00split, 00lanes, 00road_of_riches, 00monolith). Find where our time goes (walking, idling, fights, fuel) vs theirs | Ladder pull 1 Nov | Our win rate at 1,500 is ~53%; races are most of the losses |
 | Q24 | **Combined candidate (top priority)**: tb_merge_b + LOCK_MEMORY_FIX (h_3pick) + gold play (h_goldtie v2) + early-fight rule (h_earlyfight_all) + fuel caching (h_fightfuel). These touch different subsystems. Build it, run the analysis session, gate on all maps | batch-1 interim | Each piece is +0 to +3 games alone; together they may clear the 82/140 gate |
 | Q20 | **TP-crystal into a guard-enclosed altar ring** (02the-pack: the ring is free inside 48 wolves; sleeping wolves don't attack) | h_goldtie analysis | Turns a real ladder 0-0 loss into a gem win |
 | Q21 | **Universal respawn-rule movement fix** (01yellow-brick-road: champions froze ~1,700 rounds on a dead camp tile of a half-cleared group) | h_goldtie analysis | Bug fix |
