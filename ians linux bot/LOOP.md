@@ -42,12 +42,14 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
    - Turn each **new** loss pattern into a strategy hypothesis in STRATEGIES.md (opponent comp, map type, how they won). Download replays only for losses we want to study, and run `tools/analyze_match.py` on their statistics.
 2b. **Scout every new match set** (user, 1 Nov: analyse what exactly we were weak at, what the opponent's strategy was, and how it was superior or inferior to ours, not just who we played).
    - Pull each new set with `python3.12 tools/ladder_pull.py`.
+   - **This is the top priority each tick.** `python3.12 tools/unscouted.py` lists the sets without a note, newest first. Run them through `tools/workflows/ladder_scout.js` (`Workflow({scriptPath: ".../ians linux bot/tools/workflows/ladder_scout.js", args: <that JSON>})`).
+   - Self-play experiments (step 3) keep running alongside at lower priority; the user wants both.
    - For each new set, write a scouting report to `results/ladder/scouting/<date>-<group8>-<opponent>.md` using `tools/scout.py` (profiles both teams: build order, farming and tempo, tributes, fights, map control) and `tools/analyze_match.py`. Cover:
      - the opponent's game plan;
      - the decisive moments of each game, with round numbers;
      - their strategy vs ours, and the responsible code in our bot;
      - our weaknesses, and testable hypotheses.
-   - Every few sets, update the ranked weakness ledger `results/ladder/WEAKNESSES.md` and feed its top items into STRATEGIES.md.
+   - With each batch of notes, update the readable synthesis `results/ladder/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`) and the ranked weakness ledger `results/ladder/WEAKNESSES.md`, and feed their top items into STRATEGIES.md.
    - The full replay zip (`cambc matches download <id>`) adds our bot's stdout and per-turn fuel trace when decisions need explaining.
 3. **Strategy experiments: hypothesis → test → detailed analysis → new hypotheses.** This is the core learning process. If fewer than about 2 experiment workflows are running, take the top untested items from the STRATEGIES.md queue and launch a workflow in which every strategy goes through all four stages:
    - **(a) Implement** the strategy in its own candidate bot (`tools/newbot.py <champion> <cand>`; never edit the champion).

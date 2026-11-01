@@ -23,6 +23,12 @@ Team repo for Cambridge Battlecode 2026a ("cambc", https://2026a.battlecode.co.u
   - submissions for every tournament and qualifier.
 - **Every simulated match must test a new, meaningful, distinct strategy hypothesis.** Hypotheses come from our real ladder games, our own bots, or postmortems. **Never simulate for its own sake** (no idle soak runs).
 - **Every experiment ends in a detailed analysis session.** Use `tools/analyze_match.py` to cover the gem race, opening tempo, deaths with killers, per-champion lines, and replay stdout. Write a report in `results/experiments/`, and feed new hypotheses back into STRATEGIES.md. The user calls this "the critical learning process".
+- **Analyse every real ladder match carefully, from now on** (user, 1 Nov). Real-match insights are worth more than self-play.
+  - Catch up on the most recent sets first, then keep up with each new one.
+  - For each set write a note in `results/ladder/scouting/` covering the opponent's strategy, the decisive moments, how their play was superior or inferior to ours, and our weaknesses.
+  - Fold the notes into `results/ladder/INSIGHTS.md`, laid out like `postmortems/INSIGHTS.md`, so the user can read the insights.
+  - Prioritise hypotheses from these insights.
+  - **Keep learning from simulated matches too.** Self-play experiments, their analysis sessions and the gate continue alongside. The user only asked to prioritise real matches, not to drop self-play (1 Nov).
 - **Always keep a ready-to-submit best bot:** `results/CHAMPION`, `submissions/READY.zip` and `results/READY.md`.
   - Look actively for improved candidates. A screen result of ≥ 55% vs the champion goes straight to the full gate.
   - Upload a promoted bot right away, so the live bot is always our best.

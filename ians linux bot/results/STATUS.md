@@ -29,12 +29,13 @@ The session-only cron tick and any running workflows die whenever the Claude pro
   `tmux new -s cambc`, then `cd /n/home05/ianpoon/Cambridge-BattleCode-Turborecallers-2026 && claude --resume 5245ba49-8b5b-4d9a-9345-708126bcbea8 --permission-mode auto`
   Only one process may hold the session, so start it after the old one has ended.
 - **The resumed agent must:**
-  1. Re-create the tick with CronCreate (`17,47 * * * *`, using the LOOP TICK prompt from the conversation; login-node rule: every game goes through `tools/onslurm.sh`).
+  1. Re-create the tick with CronCreate (`17,47 * * * *`). Its prompt follows LOOP.md; first priority is real-match scouting (`tools/unscouted.py` → `tools/workflows/ladder_scout.js`), then self-play experiments. Login-node rule: every game goes through `tools/onslurm.sh`.
   2. Check `squeue -u $USER -p test` and `results/experiments/` for the work the interrupted workflows finished.
   3. Relaunch what is missing.
 - **Login-node rules:** run no games locally, not even a single debug game; send them through `tools/onslurm.sh -c 2 -m 2G -t 00:05:00 -J dbg -- ./cli/cambc run ...`. Long analysis scripts also go through onslurm.
 
 ## In progress
+- **Workflow `battlecode-ladder-scouting`** (launched ~01:40 EDT): deep scouting of all 24 v3/v4 ladder sets. It builds `tools/scout.py`, writes per-set notes in `results/ladder/scouting/` and a ranked `results/ladder/WEAKNESSES.md`. From now on every new set is scouted each tick into `results/ladder/INSIGHTS.md` (user, 1 Nov: real-match insights first, self-play continues).
 - **Batch 4 (finished 00:50 EDT):**
   - **c3_teamclear failed the gate** (80/140 vs q24, LB 0.489). It fixes 02gift-wrapping, but muster idling cancels the gain elsewhere.
   - **h_spawnheal** was inconclusive (74/140).
