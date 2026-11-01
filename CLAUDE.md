@@ -68,6 +68,11 @@ python3 tools/eval.py sf_base starter-python --maps quick --jobs 4   # smoke tes
 ```
 The CLI version must match the platform engine (4.0.0 / engine 2.0.0 on 31 Oct 2026). If `/game/download` lists a newer version, update before evaluating.
 
+**On the FASRC cluster** (from 31 Oct; details in `results/STATUS.md` → "Cluster operating notes"):
+- Use `python3.12` for the tools; the system `python3` is 3.6.
+- `cli/cambc` and `matches/`/`replays/` are symlinks into holylabs and netscratch.
+- Run every eval through `tools/onslurm.sh`. It uses the free `test` partition, the only lane the user allows.
+
 ## Rules of the road
 - **Local games are deterministic:** the same bots on the same map give identical games. Never re-run a map; get evidence from more maps (`--maps all` = 140 games).
 - **Strong side bias:** team B wins ~75% of mirror games. Always evaluate both sides, which `tools/eval.py` does by default.
