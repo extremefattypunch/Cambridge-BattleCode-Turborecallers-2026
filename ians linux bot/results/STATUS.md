@@ -1,13 +1,13 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-11-01 04:25 EST / 09:25 UTC (after a usage-limit pause from ~02:10 to 04:00 EST).
+- **Last update:** 2026-11-01 09:30 UTC (tick).
 - **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), website **v4**, **live since ~04:40 UTC on 1 Nov** after a full gate pass plus a skeptic pass (`results/READY.md`).
 - **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/real-matches/studies/2026-11-01_0437_v3-ladder-study/notes.md`) found:
   - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
   - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
   - Fuel caching, gold play and lock memory are confirmed working on real games.
   - Decision: keep v3, and require successors to also beat tb_merge_b locally (c2: 98/140).
-  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 69W-66L, rating 1,538** (stable around 1,530; its 4-10 start was noise).
+  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 76W-69L, rating 1,550** (rising; its 4-10 start was noise).
     - Us V Them (Power Focus casters): 1-4. They also beat v3 3-7, so this is the V3L-1 focus-burst matchup.
     - Lie groups lie (near-mirror draft): 0-4, consistent with c2's mirror-draft weakness; c2_3pick is in progress.
     - Full Damage: 3-2.
@@ -43,6 +43,8 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - Untracked compatibility symlinks in `results/experiments/` (and `TEMPLATE.md` there) exist only for workflows started before the move. Delete them once batch 6, batch 7 and both scouting workflows have finished.
 
 ## In progress
+- **Workflow `ladder-scout` #2** (09:30 UTC): 6 more matches claimed (Math Have Mercy, big, FF15, GLM-5.3, AI Coliseum, Team 921). The big scouting batch has written 15 of 24 notes.
+- **Workflow `battlecode-batch9`** (09:30 UTC): pre-registered **h_band** (queue #1: the low-HP band continuity fix) and **h_af_lite** (queue #2: fuel-clean h_antifocus).
 - **Batch 6: c4_fallback failed gate (a), 78/140 vs c2** (LB 0.474). Hedge 99/140 vs tb_merge_b; gauntlet 177 = 177.
   - It fixes 02gift-wrapping (W 1032-0; beats starter-python where c2 loses 0-80), but the fallback fires in only ~10 games.
   - Kept as a component.

@@ -42,7 +42,7 @@ phase('Insights')
 const done = notes.filter(Boolean)
 const insights = await agent(`${COMMON}
 TASK: fold ${done.length} new match-set notes into the living insights documents. New notes (structured): ${JSON.stringify(done)}
-Start from the current ${REPO}/results/real-matches/INSIGHTS.md and WEAKNESSES.md, which already summarise every earlier note, plus these new notes. Open an earlier note only to check a specific claim; never re-read them all. Cross-match studies are in results/real-matches/studies/.
+Start from the current ${REPO}/results/real-matches/INSIGHTS.md and WEAKNESSES.md, which already summarise every earlier note, plus these new notes, plus any other notes in results/real-matches/*/notes.md that are newer than INSIGHTS.md (another scouting run may have written them concurrently; list them with: find "${REPO}/results/real-matches" -name notes.md -newer "${REPO}/results/real-matches/INSIGHTS.md"). Open an earlier note only to check a specific claim; never re-read them all. Cross-match studies are in results/real-matches/studies/.
 1. Update results/real-matches/WEAKNESSES.md, the ranked weakness ledger, with at most 25 open rows. Per weakness give:
    - the number of matches and games it decided, and links to at most 3 representative notes (INDEX.md is the full list);
    - the evidence and the code location;
