@@ -46,15 +46,15 @@ Champion: see `results/CHAMPION`.
 | T17b | h_earlyfight_all on all maps | Q12 | 84/140; our early deaths −23%, enemy early deaths unchanged | kept (inside q24_combo) |
 | T18b | h_fightfuel on all maps | Q13 | 72/140; fuelExh −93%, in-fight suspensions −99%, no win gain alone | rejected alone; kept in q24_combo for fuel headroom |
 | T19b | h_antistun on all maps | Q15 | 79/140; risky channel starts fell but events rare | rejected |
+| T23 | **Q26 team bootstrap for wrapped/large groups (h_teamclear)**: when the solo safety check rejects a group, a team check with a muster gate lets the first champion commit so claims cascade | Ladder 02gift_wrapping 0-1028 / 16-1006 | **91W-49L vs tb_merge_b on all maps**; gauntlet 164/200 (tb_merge_b 158); 02gift-wrapping 0 clears → 20-22 clears, W 1002-0; ablation: wrap fix alone 82/140, team clear without it 64/140 | **kept**; next: port onto the champion line and gate |
+| T24 | Q27 02treasure_box (h_treasure): spawn-heal-aware fighting + cluster-chain value + far-altar banking | Ladder 02treasure_box, lost 3 times | 72W-68L vs tb_merge_b; both mechanisms confirmed (spawn-heal engage turns 65% → 0%), but regressions offset the gain | inconclusive; refine (Q27b-d) |
+| T25 | Q28 race tempo (h_tempo): Jungle-first farming item build + Strength arm | 7 lost ladder races | 75W-65L vs tb_merge_b; farming +2-10% but losses became fight blowouts | rejected as built; refinements Q28b-d |
 
 ## Queue (highest expected value first; refine with each ladder pull)
 
 **Blind spot (1 Nov):** every local opponent (sf_*, tb_*, imit_*, lad_*, h3_*) runs our own farming and safety logic, so maps where *our logic* scores 0 look like 0-0 ties locally. Real opponents score 1000 there (Q26, Q27). Judge map-structure fixes by our own clears and tributes, not only by the local result.
 | # | Strategy hypothesis | Source | Why it might win |
 |---|---|---|---|
-| Q26 | **Clear wrapped/large camp groups as a team** (02gift_wrapping: we did 0 monster damage and 0 clears all game and lost 0-1028 and 16-1006, while opponents cleared 21 groups. Locally the map is 0-0 only because every local opponent shares our solo safety model) | Ladder pull 1 Nov 00:43 UTC | Turns a guaranteed loss into a race; any unseen map with big groups has the same blind spot |
-| Q27 | **02treasure_box failure**: 0 tributes in 995 rounds, 4 clears, 21 champion deaths, 112 fuelExhausted; lost 0-1002 and 163-1005. Diagnose locally (the map is in maps/ as 02treasure-box) and fix generally | Ladder pull 1 Nov | A structural zero on a ladder map |
-| Q28 | **Farming tempo in races at ~1,500**: 7 close losses where the opponent reached ~1000 first (00quadrants x2, 00rows, 00split, 00lanes, 00road_of_riches, 00monolith). Find where our time goes (walking, idling, fights, fuel) vs theirs | Ladder pull 1 Nov | Our win rate at 1,500 is ~53%; races are most of the losses |
 | Q20 | **TP-crystal into a guard-enclosed altar ring** (02the-pack: the ring is free inside 48 wolves; sleeping wolves don't attack) | h_goldtie analysis | Turns a real ladder 0-0 loss into a gem win |
 | Q22 | **Open-gate rush**: on no-tribute maps, when a guard dies, rush the carried gems to the altar | h_goldtie analysis | Converts big carried bags |
 | Q23 | **Map analysis in the draft** (250M fuel) via draft memory; keep turn 1 fuel-identical | h_goldtie analysis | Removes turn-1 divergence and frees fuel |
@@ -116,3 +116,23 @@ Champion: see `results/CHAMPION`.
 | Per-camp death-trap memory | 2026-11-01-h_respawnfix.md | Hard-banning a group after 2 deaths to it, or requiring full HP plus an ally, saves the carried gems (11 were lost there) and the respawn time. |
 | Respawn denial as a tool (speculative) | 2026-11-01-h_respawnfix.md | An idle champion could park on a high-value respawning group on the enemy's side and deny it gems and gold. Test only after the oscillation guard. |
 | Add freeze_metric to every gate analysis | 2026-11-01-h_respawnfix.md | It catches new stalls before they cost games, and it measures idle time for Q28 (where our time goes). |
+
+## New hypotheses from ladder-learning 1 (1 Nov)
+| Hypothesis | Source report | Why it might win |
+|---|---|---|
+| Merge Q26 team bootstrap into the Q24/Q21 combo | 2026-11-01-h_teamclear.md | The team bootstrap only pays off on top of a fix for frozen champions, and the Q21 fix is the one already gated. Merge TEAM_CLEAR, TEAM_TANK_CHECK, TEAM_MUSTER, TEAM_WRAP_FIX(a), the dead mark 255 and presence byte 6 int |
+| Gold-valued team targets on no-tribute maps (with h_goldtie no_tribute) | 2026-11-01-h_teamclear.md | Gold decides these maps, and the team option ranks groups by gems. |
+| Heterogeneous team sizing from teammates' published tank budgets | 2026-11-01-h_teamclear.md | A faster first clear of the most valuable group, and fewer wasted musters. |
+| Shared camp-kill state to drop stale hidden-camp threats | 2026-11-01-h_teamclear.md | Avoids phantom retreats and lost tempo in team play. Publish a per-group alive bitmask, or decay the belief once the engine state reads RewardAvailable or Respawning. |
+| Deliberate aggro rotation in team fights | 2026-11-01-h_teamclear.md | Each aggro holder can absorb only about maxhp - s*(rng+1) before fleeing. Rotating the tank (step out at the threshold while the next-nearest steps in) could unlock these groups early. |
+| Q27b: touching-spawn exception for the spawn-adjacent rule | 2026-11-01-h_treasure.md | When spawns touch, both sides heal next to their spawn. Skipping enemies adjacent to their spawn then concedes fights and farming. Apply the skip only when we are not within 1 of our own spawn, or when the spawn regions  |
+| Q27c: gold floor for the chain bonus | 2026-11-01-h_treasure.md | The chain term lifts gem clusters to about 28 value while gold clusters stay at 5-20, starving item purchases. In any contested game, itemless champions lose every fight. Count H.value (with gold) in the chain, or keep n |
+| Q27d: capped delivery term | 2026-11-01-h_treasure.md | A capped term, e.g. min(0.5*d, W*altar_d*share/15), or one restricted to the altar's walk component, may keep the head-to-head gain without the stall. Also check FAR_ALTAR_BANK and turret-avoid walks near Monolith-guarde |
+| Willow heal-sink comps (EXP'D imitation) | 2026-11-01-h_treasure.md | The heal-aware chase guard removed starter-python's Willow sink (311k -> under 1k), but no local opponent pairs a healer with competent farming. Build lad_expd to test the guard against off-spawn heal sinks. |
+| Evaluation noise floor and non-reproducibility | 2026-11-01-h_treasure.md | A single 140-game gate cannot attribute differences of about 5 games. Measure the null distribution (a flags-off copy of the champion, all maps). Find the nondeterminism source (debug vs release fuel metering; id()-hashe |
+| sub7anr-style imitation opponent for the cluster-field blind spot | 2026-11-01-h_treasure.md | Locally no opponent contests the field, so we cannot yet tell whether h_treasure's successors win the field fight or only farm it unopposed. |
+| Q28b: adaptive emblem order by observed PvP pressure | 2026-11-01-h_tempo.md | Buy Jungle first only while the team sees little PvP; for example, no ally has been killed by an enemy champion and no enemy champion has been seen near our camps by the first emblem. Otherwise, or after the first PvP de |
+| Q28c: Jungle item without riskier targeting | 2026-11-01-h_tempo.md | Leave choose_target's dmg_mult at 1.0, or use it only in the HP budget and not the cycle test, while keeping the Jungle passive. This isolates a behavioural cause (bigger or farther groups at lower HP, so more exposure)  |
+| Q28d: Strength arm alone (Monster emblem + Strength-weighted Bruiser), without Jungle | 2026-11-01-h_tempo.md | This may close the late damage gap without the camp-damage-vs-fight trade that sinks the Jungle build on brawl maps. |
+| Fuel-dependent non-determinism of local games | 2026-11-01-h_tempo.md | It undermines the 'deterministic, never re-run' rule and adds noise to gate counts on fuel-heavy maps. Q25 (cheaper sensing) would also restore reproducibility. Test: run one pair twice on those maps and diff the results |
+| Altar-camping death loop | 2026-11-01-h_tempo.md | After k deaths at the same altar within N rounds, switch altars or regroup before tributing. Any camped single-altar map otherwise becomes a zero-score game, as in the 02treasure_box pattern. |
