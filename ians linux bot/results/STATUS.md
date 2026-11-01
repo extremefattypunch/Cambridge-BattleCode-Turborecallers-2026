@@ -1,12 +1,17 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-11-01 00:40 EDT: **c2_respawn promoted and uploaded as website v4**. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Last update:** 2026-11-01 01:05 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), website **v4**, **live since ~04:40 UTC on 1 Nov** after a full gate pass plus a skeptic pass (`results/READY.md`).
 - **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/experiments/2026-11-01-v3-ladder-study.md`) found:
   - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
   - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
   - Fuel caching, gold play and lock memory are confirmed working on real games.
   - Decision: keep v3, and require successors to also beat tb_merge_b locally (c2: 98/140).
+  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 4W-10L so far (rating 1,530 → 1,507).**
+    - Us V Them (Power Focus casters): 1-4. They also beat v3 3-7, so this is the V3L-1 focus-burst matchup.
+    - Lie groups lie (near-mirror draft): 0-4, consistent with c2's mirror-draft weakness; c2_3pick is in progress.
+    - Full Damage: 3-2.
+    - 14 games is not significant (p ≈ 0.09); v3 also opened 5/15 and ended 45-45. Keep monitoring.
   - By team size: 3-pick 13/19, 4-pick 23/28, 5-pick 38/63.
   - New loss patterns: **02gift_wrapping** (0 clears all game, lost 0-1028 and 16-1006: Q26); **02treasure_box** (0 tributes, lost 0-1002 and 163-1005: Q27); **7 close races** where the opponent hit ~1000 first (Q28); 0-0 gold tiebreaks on 01boss_battle and 02guardians (h_goldtie's target).
   - CLI login done 1 Nov ~01:00 UTC; it **expires ~7 Nov**. Ladder statistics are in `matches/ladder/summary/<id>__<our side>.json` (feed `tools/analyze_match.py` directly).
