@@ -1,12 +1,12 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-10-31 ~20:50 EDT. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Last update:** 2026-10-31 21:02 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `tb_merge_b` (Python), website **v2**, Active / Verified. It was our **Sprint 3 entry** (snapshot 31 Oct 23:59 UTC; Sprint 3 was seeding as of 00:30 UTC on 1 Nov).
-- **Ladder (pulled 1 Nov ~01:10 UTC via `python3.12 tools/ladder_pull.py`):** v2 is **59W-31L** (66%). Rank 411, rating **1,497**. The latest 30 games went only 16-14.
+- **Ladder (pulled 1 Nov ~01:10 UTC via `python3.12 tools/ladder_pull.py`):** v2 is **62W-33L** (65%), rating **1,501** after the 01:00 UTC set. The latest 35 games went 19-16. 02treasure_box was lost a **third** time (138-1005 vs EXP'D), and 00quadrants again by 26 gems (Q27, Q28).
   - By team size: 3-pick 11/17, 4-pick 17/21, 5-pick 31/52.
   - New loss patterns: **02gift_wrapping** (0 clears all game, lost 0-1028 and 16-1006: Q26); **02treasure_box** (0 tributes, lost 0-1002 and 163-1005: Q27); **7 close races** where the opponent hit ~1000 first (Q28); 0-0 gold tiebreaks on 01boss_battle and 02guardians (h_goldtie's target).
   - CLI login done 1 Nov ~01:00 UTC; it **expires ~7 Nov**. Ladder statistics are in `matches/ladder/summary/<id>__<our side>.json` (feed `tools/analyze_match.py` directly).
-- **Upcoming locks:** International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov. Not yet listed in `/api/v1/tournaments` (only Sprints 1-3 were, at 00:30 UTC on 1 Nov). Recheck each tick.
+- **Upcoming locks:** International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov. Still not listed in `/api/v1/tournaments` at 01:02 UTC on 1 Nov (Sprint 3 is now `ready`). Recheck each tick.
 
 ## Cluster operating notes (31 Oct)
 - Tools run with **`python3.12`**; the system `python3` is 3.6.
