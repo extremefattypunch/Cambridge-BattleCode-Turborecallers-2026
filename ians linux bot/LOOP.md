@@ -43,11 +43,21 @@ A session-scheduled job (`CronCreate`, about every 30 min) triggers one **tick**
      Then add those hypotheses to the STRATEGIES.md queue, record the verdict there, and never re-run a rejected idea unchanged. Combine compatible winners in a follow-up merge experiment.
 
    **No match is run without a hypothesis, and no experiment ends without an analysis session and a written report.**
-4. **Promotion gate.** A candidate replaces the champion only if all of these hold:
-   - `tools/eval.py <cand> <champion> --maps sprint`: **≥ 55%** and **botFaults 0**;
-   - `tools/gauntlet.py <cand> --maps sprint`: no regression against the rest of the pool;
-   - one `--release` game: 0 crashes;
-   - for movement or draft changes, also `--maps all`: ≥ 55%.
+3b. **Candidate watch and the ready-to-submit bot** (user, 31 Oct).
+   - Always keep the **strongest validated bot** ready to submit for any tournament at any time:
+     - `results/CHAMPION` holds its name;
+     - `submissions/READY.zip` holds its bundle;
+     - `results/READY.md` holds its evidence and the watched candidates.
+   - Look actively for improved candidates. The moment any experiment shows **≥ 55% vs the champion on sprint** (a screening threshold only), immediately launch a gate workflow for it (step 4) on a frozen snapshot copy (`tools/newbot.py <cand> <cand>_g1`), without waiting for its batch to finish.
+   - Compatible near-winners (e.g. two candidates at 55% that change different subsystems) get a merge candidate that is gated too.
+   - On promotion, rebuild READY.zip and **upload it as the live version right away** (step 5), so the live bot is always the best one we have, not only at deadlines.
+4. **Promotion gate: the candidate must be *certain* to outperform the champion** (user, 31 Oct: "it must be certain to outperform the old bot"). All of these must hold:
+   - **(a) Head-to-head, decisive:** `tools/eval.py <cand> <champion> --maps all` (70 maps × both sides = 140 games; local games are deterministic, so this is all the head-to-head evidence there is). The **95% Wilson lower bound of the win rate must be above 50%**, i.e. **≥ 82 of 140 (58.6%)**. Also **botFaults 0**.
+   - **(b) Paired gauntlet:** `tools/gauntlet.py <cand> --pool <P> --maps sprint` and the same command for the champion, against the same pool `P` (currently sf_bank, tb_merge_a, tb_aggro, imit_test, lad_vcst). Total candidate wins must be **≥ the champion's**, and it must not lose more than 4 games' worth against any single opponent.
+   - **(c) Robustness:** one `--release` game with 0 crashes, and `match_metrics` fuelExhausted not worse than the champion's.
+   - **(d) Analysis session:** confirms the targeted mechanism changed and that the gain isn't an artefact (e.g. one map family).
+
+   **Anything short of this stays a candidate, never a submission.** Near-misses (e.g. 55–58%) are combined or refined and re-gated, not shipped.
 5. **Promote and submit.**
    - Write `results/CHAMPION`.
    - Run `./cli/cambc bundle <bot> --output submissions/<bot>.zip`.
