@@ -74,7 +74,11 @@ def main():
     os.makedirs(out, exist_ok=True)
     # Manifest paths are resolved relative to the manifest's directory, and the
     # manifest is whitespace-separated, so keep everything relative (ROOT has spaces).
-    rel = "../.."
+    # A space-free ROOT (tools/onslurm.sh's per-job snapshot) is addressed directly; otherwise
+    # "../.." also works when matches/ is a symlink, given bots/ and maps/ links beside its target.
+    rel = os.path.relpath(ROOT, os.path.realpath(out))
+    if any(c.isspace() for c in rel):
+        rel = "../.."
     rows = []
     games = []
     for m in maps:
