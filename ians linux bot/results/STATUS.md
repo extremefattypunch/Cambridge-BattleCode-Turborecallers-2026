@@ -15,7 +15,14 @@
 - Determinism holds across machines: the cluster reproduced the dev-PC gauntlet numbers exactly.
 
 ## In progress
-- **Workflow `battlecode-ladder-learning-1`** (launched ~21:00 EDT): Q26 (02gift_wrapping zero clears), Q27 (02treasure_box zero tributes), Q28 (race tempo). Each is a diagnosis followed by one fix experiment. NB: its candidates fork **tb_merge_b**, so any keeper must be ported onto q24_combo and gated against it.
+- **Workflow `battlecode-batch3`** (launched ~21:28 EDT):
+  - **c2_respawn** = q24_combo + respawn fix: merge, review, gate vs q24_combo;
+  - **placebo** noise-floor calibration;
+  - **Q30**: q24's large-map regression (h_bigmap).
+- **Workflow `battlecode-batch4`** (launched ~22:35 EDT):
+  - **c3_teamclear** = q24_combo + Q26 team bootstrap: merge, review, gate vs q24_combo;
+  - **Q27-refined** spawn-heal-aware fighting (h_spawnheal).
+- After both: if c2 and c3 each pass, build **c4 = q24 + respawn fix + team clear** and gate it against the new champion.
 
 ## Done this session
 - **Champion gauntlet baseline:** `tb_merge_b` **158/200** on sprint maps. In `results/gauntlet.jsonl`.
@@ -24,6 +31,11 @@
   - **h_respawnfix (Q21): 92/140 vs tb_merge_b.** Next: merge it into q24_combo and gate.
   - Batch-1 analyses: h_earlyfight_all 84/140, h_antistun 79 (rejected), h_3pick 75, h_goldtie 74, h_fightfuel 72 (rejected alone).
 - **Methodology flag:** the fuel-sensitive bots (h_goldtie, h_earlyfight_all, h_fightfuel) did not reproduce their dev-PC sprint records game for game, while h_3pick and h_antistun did. A null-change placebo run should calibrate the gate's noise.
+- **Ladder-learning 1 (finished ~22:25 EDT):**
+  - **Q26 h_teamclear kept: 91/140 vs tb_merge_b**, gauntlet 164/200. Root cause: no champion commits first to a group the solo check rejects; 73 such groups on 22 local maps.
+  - Q27 h_treasure inconclusive (72/140): the mechanism was confirmed but regressions cancelled it.
+  - Q28 h_tempo rejected (75/140).
+  - Noise warning: identical logic under another bot name replayed only 26 of 40 games identically.
 - **Agent relay** (`tools/agent_relay.sbatch`, `tools/agent_attach.sh`): it keeps this session alive past the 12 h job cap on the free test partition. Dry runs and a live `claude --resume` test passed. **Not armed**; waiting for the user's go-ahead.
 
 ## Resume here (in order)
