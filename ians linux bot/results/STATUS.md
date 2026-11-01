@@ -1,13 +1,13 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-11-01 01:50 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Last update:** 2026-11-01 04:25 EST / 09:25 UTC (after a usage-limit pause from ~02:10 to 04:00 EST).
 - **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), website **v4**, **live since ~04:40 UTC on 1 Nov** after a full gate pass plus a skeptic pass (`results/READY.md`).
 - **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/real-matches/studies/2026-11-01_0437_v3-ladder-study/notes.md`) found:
   - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
   - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
   - Fuel caching, gold play and lock memory are confirmed working on real games.
   - Decision: keep v3, and require successors to also beat tb_merge_b locally (c2: 98/140).
-  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 17W-18L so far** (rating 1,530 → 1,507 → 1,526; 13-8 since its 4-10 start).
+  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 69W-66L, rating 1,538** (stable around 1,530; its 4-10 start was noise).
     - Us V Them (Power Focus casters): 1-4. They also beat v3 3-7, so this is the V3L-1 focus-burst matchup.
     - Lie groups lie (near-mirror draft): 0-4, consistent with c2's mirror-draft weakness; c2_3pick is in progress.
     - Full Damage: 3-2.
@@ -43,6 +43,9 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - Untracked compatibility symlinks in `results/experiments/` (and `TEMPLATE.md` there) exist only for workflows started before the move. Delete them once batch 6, batch 7 and both scouting workflows have finished.
 
 ## In progress
+- **Workflow `ladder-scout`** (09:06 UTC): 6 newest matches (67 0-5, THE THINK TANK 2-3, Sloppy Joe Pirates 3-2, slop 1-4, Babapro31 2-3, VeryHotKimchi 4-1), claimed. About 14 more matches since 05:42 UTC are still to scout; the next ticks take them.
+- **Workflow `strategies-consolidate`**: folds STRATEGIES.md into one ranked queue; the original goes to `results/strategies-archive.md`.
+- The OOD session ends 07:13 EST. Restart on a login node per the checklist above.
 - **Workflow `battlecode-ladder-scouting`** (launched ~01:40 EDT): deep scouting of all 24 v3/v4 ladder matches. It built `tools/scout.py` and writes legacy-format notes to `results/ladder/scouting/`. When it finishes, `tools/organize_notes.py` moves each note to `results/real-matches/<folder>/notes.md`; then restructure each moved note into `TEMPLATE.md` order and rebuild INSIGHTS.md and WEAKNESSES.md from them. From now on every new match is scouted straight into `results/real-matches/`.
 - **Workflow `ladder-scout`** (01:48 EDT): the Electric Fog Walkers set (05:42 UTC, 4-1). After the big scouting run finishes, refresh INSIGHTS.md from all notes.
 - **Batch 4 (finished 00:50 EDT):**
