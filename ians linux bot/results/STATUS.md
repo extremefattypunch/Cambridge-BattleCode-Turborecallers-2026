@@ -1,13 +1,13 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-11-01 01:33 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Last update:** 2026-11-01 01:50 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), website **v4**, **live since ~04:40 UTC on 1 Nov** after a full gate pass plus a skeptic pass (`results/READY.md`).
 - **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/experiments/2026-11-01-v3-ladder-study.md`) found:
   - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
   - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
   - Fuel caching, gold play and lock memory are confirmed working on real games.
   - Decision: keep v3, and require successors to also beat tb_merge_b locally (c2: 98/140).
-  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 10W-15L so far (rating 1,530 → 1,507 → 1,513; 6-5 since the first 14).**
+  - **v4 (c2_respawn) has been live since 04:42:47 UTC: 17W-18L so far** (rating 1,530 → 1,507 → 1,526; 13-8 since its 4-10 start).
     - Us V Them (Power Focus casters): 1-4. They also beat v3 3-7, so this is the V3L-1 focus-burst matchup.
     - Lie groups lie (near-mirror draft): 0-4, consistent with c2's mirror-draft weakness; c2_3pick is in progress.
     - Full Damage: 3-2.
@@ -36,6 +36,7 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 
 ## In progress
 - **Workflow `battlecode-ladder-scouting`** (launched ~01:40 EDT): deep scouting of all 24 v3/v4 ladder sets. It builds `tools/scout.py`, writes per-set notes in `results/ladder/scouting/` and a ranked `results/ladder/WEAKNESSES.md`. From now on every new set is scouted each tick into `results/ladder/INSIGHTS.md` (user, 1 Nov: real-match insights first, self-play continues).
+- **Workflow `ladder-scout`** (01:48 EDT): the Electric Fog Walkers set (05:42 UTC, 4-1). After the big scouting run finishes, refresh INSIGHTS.md from all notes.
 - **Batch 4 (finished 00:50 EDT):**
   - **c3_teamclear failed the gate** (80/140 vs q24, LB 0.489). It fixes 02gift-wrapping, but muster idling cancels the gain elsewhere.
   - **h_spawnheal** was inconclusive (74/140).
