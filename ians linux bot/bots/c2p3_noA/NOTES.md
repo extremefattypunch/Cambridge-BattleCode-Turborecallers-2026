@@ -3,7 +3,7 @@
 **Lineage.** `python3.12 tools/newbot.py q24_combo c2_respawn` (champion, website v3), then every hunk of
 `diff -u bots/tb_merge_b/src/bot.py bots/h_respawnfix/src/bot.py` ported. h_respawnfix forks tb_merge_b and
 changed only `src/bot.py`. Its design, its two freeze mechanisms and its 92W-48L vs tb_merge_b are in
-`bots/h_respawnfix/NOTES.md` and `results/experiments/2026-11-01-h_respawnfix.md`. For q24_combo's own
+`bots/h_respawnfix/NOTES.md` and `results/simulated-matches/2026-11-01_0126_h_respawnfix/notes.md`. For q24_combo's own
 patches see `bots/q24_combo/NOTES.md`.
 
 | File | Change |

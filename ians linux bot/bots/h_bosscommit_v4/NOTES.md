@@ -2,7 +2,7 @@
 
 **Lineage.** `python3.12 tools/newbot.py c2_respawn h_bosscommit`. Only `src/bot.py` differs; `main.py`,
 `draft.py` and `randomness.py` are byte-identical to c2_respawn. Every change is tagged `h_bosscommit`.
-Report: `results/experiments/2026-11-01-h_bosscommit.md`. Debug copy (BOSS_LOG on): `bots/dbg_bc_trace`.
+Report: `results/simulated-matches/2026-11-01_0531_h_bosscommit/notes.md`. Debug copy (BOSS_LOG on): `bots/dbg_bc_trace`.
 
 ## Why
 Ladder 00contest: v3 lost 0-1000 (中国人能飞) and 400-1000 (Mein Kraft). All 400 of the map's gems are in two

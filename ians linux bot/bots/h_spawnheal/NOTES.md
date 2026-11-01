@@ -3,7 +3,7 @@
 **Lineage.** `tools/newbot.py q24_combo h_spawnheal`, then h_treasure's mechanism A (spawn-heal-aware
 fighting) and its cluster-chain value (B) ported from the h_treasure diff against tb_merge_b, with the
 two fixes the h_treasure report asked for. h_treasure's far-altar banking (C) and the delivery term
-are **not** ported. Report: `results/experiments/2026-11-01-h_spawnheal.md`.
+are **not** ported. Report: `results/simulated-matches/2026-11-01_0501_h_spawnheal/notes.md`.
 
 Only `src/bot.py` differs from q24_combo (2,697 -> 2,912 lines). `main.py`, `draft.py` and
 `randomness.py` are byte-identical to q24_combo. Every change is behind a module flag at the top of

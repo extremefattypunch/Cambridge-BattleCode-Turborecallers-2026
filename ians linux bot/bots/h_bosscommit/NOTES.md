@@ -2,7 +2,7 @@
 
 **Lineage.** `python3.12 tools/newbot.py c2_respawn h_bosscommit`. Only `src/bot.py` differs; `main.py`,
 `draft.py` and `randomness.py` are byte-identical to c2_respawn. Every change is tagged `h_bosscommit`.
-Report: `results/experiments/2026-11-01-h_bosscommit.md`. Debug copy (BOSS_LOG on): `bots/dbg_bc_trace`.
+Report: `results/simulated-matches/2026-11-01_0531_h_bosscommit/notes.md`. Debug copy (BOSS_LOG on): `bots/dbg_bc_trace`.
 
 ## Why
 Ladder 00contest: v3 lost 0-1000 (中国人能飞) and 400-1000 (Mein Kraft). All 400 of the map's gems are in two
@@ -53,7 +53,7 @@ Manhattan 477/519). **Ties go to the lowest unit id** (56/56).
 - Ablations: `bots/h_bosscommit_nj` (BOSS_JUNGLE False) 3/16; `bots/h_bosscommit_v4` (enemy gate 30 rounds within 10 of the boss,
   120-round commit cap, 200-round ban) 3/16.
 
-**Verdict: rejected** (report `results/experiments/2026-11-01-h_bosscommit.md`).
+**Verdict: rejected** (report `results/simulated-matches/2026-11-01_0531_h_bosscommit/notes.md`).
 - The commit clears bosses earlier (median r1184 vs c2's r1804) but halves farming on the boss maps (gold 4.0k vs 7.5k).
 - Carriers die, and c2 finishes the bosses we chip.
 - Known defect: about 76 fuelExhausted per game on the boss maps (00stampede about 500): the stand-tile filter loops goals x camps.

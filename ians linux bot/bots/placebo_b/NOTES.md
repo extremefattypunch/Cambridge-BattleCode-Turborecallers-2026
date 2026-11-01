@@ -1,6 +1,6 @@
 # placebo_b: noise-floor control (not a candidate)
 
-Made with `tools/newbot.py q24_combo placebo_b` for the gate-calibration experiment `results/experiments/2026-11-01-placebo.md`. Never submit it.
+Made with `tools/newbot.py q24_combo placebo_b` for the gate-calibration experiment `results/simulated-matches/2026-11-01_0437_placebo/notes.md`. Never submit it.
 
 - **Change:** `src/main.py` runs `_burn(PLACEBO_BURN)` at the start of every play turn. That is a pure-Python summation loop of 100 iterations, with the result discarded.
 - **Fuel cost:** about 69-76k per turn (about 3% of the 2.5M budget). This was measured from the replay `.fuel` streams against the q24_combo mirror, before the games diverge.

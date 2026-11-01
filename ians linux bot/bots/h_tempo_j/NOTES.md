@@ -1,4 +1,4 @@
-# h_tempo_j: h_tempo with TEMPO_STR_ARM=False (= iteration 1), used for the diagnostic all-maps run matches/ll1-h_tempo_j-all (71W-69L). See results/experiments/2026-11-01-h_tempo.md.
+# h_tempo_j: h_tempo with TEMPO_STR_ARM=False (= iteration 1), used for the diagnostic all-maps run matches/ll1-h_tempo_j-all (71W-69L). See results/simulated-matches/2026-11-01_0153_h_tempo/notes.md.
 
 # tb_merge_b: Sprint 3 merge of sf_pvp, sf_bank, sf_draft and sf_fuel
 

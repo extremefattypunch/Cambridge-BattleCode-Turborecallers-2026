@@ -7,7 +7,7 @@
    - (b) weight caster burst higher.
 
 ## Setup
-- **Ladder data:** 80 real games, in `results/ladder-games-2026-10-31.json`. The statistics script is `postmortems/ladder_stats.py`, and the report is `results/ladder-analysis-2026-10-31.md`.
+- **Ladder data:** 80 real games, in `results/ladder-games-2026-10-31.json`. The statistics script is `postmortems/ladder_stats.py`, and the report is `results/real-matches/studies/2026-10-31_2340_ladder-analysis/notes.md`.
 - **Imitation opponents:** copies of tb_merge_b with only the draft changed: `lad_vcst`, `lad_svrc`, `lad_hyb`, `lad_varg4`, `imit_test`.
 - **Fix candidates:** `tb_v3_cand` (shield as HP) and `tb_v3_burst` (caster burst weighting).
 

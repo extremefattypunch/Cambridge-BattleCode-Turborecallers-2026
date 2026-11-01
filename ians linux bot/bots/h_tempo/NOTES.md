@@ -5,7 +5,7 @@ Fork of tb_merge_b. Flags at the top of src/bot.py:
 - TEMPO_THREAT_FIX: threats() scales only the camp part by 0.7 when any Jungle emblem is owned (was x0.8 on the total, incl. enemy champions). jungle() recognises any-stat Jungle emblems; dps() recognises any-stat Monster emblems.
 - TEMPO_JUNGLE_COUNTS (iteration 1): the Jungle emblem counts as one emblem of its stat in the Bruiser plan, so it replaces the first main-stat Bruiser emblem.
 - TEMPO_STR_ARM (iteration 2): after Jungle + one Bruiser emblem, Vesper/Vendetta/Ryth buy a Monster emblem (Strength shards) and then follow S:3,H:1 (Vesper, Vendetta) / S:1,H:1 (Ryth).
-Gate vs tb_merge_b on all maps: 75W-65L (54%), not promoted. Report: results/experiments/2026-11-01-h_tempo.md.
+Gate vs tb_merge_b on all maps: 75W-65L (54%), not promoted. Report: results/simulated-matches/2026-11-01_0153_h_tempo/notes.md.
 Below: tb_merge_b's notes, unchanged.
 
 # tb_merge_b: Sprint 3 merge of sf_pvp, sf_bank, sf_draft and sf_fuel

@@ -1,4 +1,4 @@
-# h_tempo_s: byte-identical copy of h_tempo iteration 2 (TEMPO_STR_ARM=True), used for the iteration-2 screen (matches/ll1-h_tempo-it2-*). See bots/h_tempo/NOTES.md and results/experiments/2026-11-01-h_tempo.md.
+# h_tempo_s: byte-identical copy of h_tempo iteration 2 (TEMPO_STR_ARM=True), used for the iteration-2 screen (matches/ll1-h_tempo-it2-*). See bots/h_tempo/NOTES.md and results/simulated-matches/2026-11-01_0153_h_tempo/notes.md.
 
 # tb_merge_b: Sprint 3 merge of sf_pvp, sf_bank, sf_draft and sf_fuel
 

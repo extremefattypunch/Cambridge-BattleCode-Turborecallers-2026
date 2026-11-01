@@ -2,7 +2,7 @@
 
 **Lineage.** `python3.12 tools/newbot.py c2_respawn c2_3pick` (champion, website v4). Only `src/bot.py` differs;
 `main.py`, `draft.py` and `randomness.py` are byte-identical to c2_respawn. The full study (diagnosis, ablations,
-screens, final runs) is `results/experiments/2026-11-01-c2_3pick.md`. For c2_respawn's own patch see
+screens, final runs) is `results/simulated-matches/2026-11-01_0531_c2_3pick/notes.md`. For c2_respawn's own patch see
 `bots/c2_respawn/NOTES.md`.
 
 | File | Change |

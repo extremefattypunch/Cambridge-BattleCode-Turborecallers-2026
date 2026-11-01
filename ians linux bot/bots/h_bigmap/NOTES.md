@@ -1,7 +1,7 @@
 # h_bigmap: STRATEGIES Q30 (claim 2-cycle fix + universal 2-cycle guard)
 
 **Lineage.** `tools/newbot.py q24_combo h_bigmap`; only `src/bot.py` changed (every change is behind
-`CLAIM_FIX` / `CYCLE_GUARD`; no map names). Report: `results/experiments/2026-11-01-h_bigmap.md`.
+`CLAIM_FIX` / `CYCLE_GUARD`; no map names). Report: `results/simulated-matches/2026-11-01_0437_h_bigmap/notes.md`.
 Diagnostic twins (trace-only, fuel-free `cambc.debug_block` dumps): `bots/dbg_hbig` (v1),
 `bots/dbg_hbig2` (v2 = this bot + trace), `bots/dbg_q30bank` (one-off goal/bank prints, 02tangle r60-130).
 

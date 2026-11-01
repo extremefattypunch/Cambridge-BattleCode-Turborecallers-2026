@@ -2,7 +2,7 @@
 
 **Lineage.** `python3.12 tools/newbot.py c2_respawn h_shortcut` (champion, website v4), then one patch to `src/bot.py`
 (final version = v2 below). Everything else: `bots/c2_respawn/NOTES.md` (q24_combo + h_respawnfix), `bots/q24_combo/NOTES.md`.
-Experiment report: `results/experiments/2026-11-01-h_shortcut.md`.
+Experiment report: `results/simulated-matches/2026-11-01_0531_h_shortcut/notes.md`.
 
 | File | Change |
 |---|---|

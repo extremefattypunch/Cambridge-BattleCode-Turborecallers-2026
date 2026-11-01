@@ -8,7 +8,7 @@ _Last updated: 2026-10-31 ~20:15 EDT, at the handoff from the dev PC to the clus
 - **Ladder context** on 31 Oct: 815 ranked teams. The top 10 are almost all C++, rated about 2,300–2,650.
 - **Reality check from the real ladder:** v1 (`tb_splitfarm`) went from 1,500 to **1,410** over its first 13 ranked match sets on 31 Oct. It won **3 sets and lost 10**, with five 0–5 losses against teams rated about 1,400–1,500 (FürFortnite, LigaSiur, Hammer Method, Patient Wolves, mostly harmless).
   - It beat the starter 100% locally, so **our local self-play numbers overstate real strength a lot.**
-  - `tb_merge_b` (v2) then went **43W-17L** (72%) on the ladder, rating 1,407 → ~1,491 (plateau). Weak spots: 3-pick maps (6/12), 0-0 gold tiebreaks (02the_pack), and **mirror-meta teams at ~1,500** that play our exact draft better. Details: `results/ladder-analysis-2026-10-31.md`, `results/ladder-games.jsonl`.
+  - `tb_merge_b` (v2) then went **43W-17L** (72%) on the ladder, rating 1,407 → ~1,491 (plateau). Weak spots: 3-pick maps (6/12), 0-0 gold tiebreaks (02the_pack), and **mirror-meta teams at ~1,500** that play our exact draft better. Details: `results/real-matches/studies/2026-10-31_2340_ladder-analysis/notes.md`, `results/ladder-games.jsonl`.
 - **Our bot lineage:**
   1. `starter-python`, the official starter. It dies about 28–35 times per game.
   2. Builder round: four independent designs. NOTES.md in each bot dir explains its design and lists hard-won engine facts. Results on 20 sprint maps × both sides vs starter-python:
@@ -54,8 +54,8 @@ Conclusion: tb_splitfarm (64%) was chosen as the improvement base. tb_aggro (62%
 |---|---|---|---|
 | v1 | tb_splitfarm (= sf_base) | interim; split-map farmer with TP crystal crossing. Verified on the platform | 31 Oct 19:31 UTC |
 | v2 | **tb_merge_b** | final Sprint 3 bot: splitfarm + fight/flee, banking, pvp focus/locks, meta draft, fuel cache. Selected for the next match | 31 Oct 21:42 UTC |
-| v3 | **q24_combo** | tb_merge_b + lock memory, gold tiebreak, group fights, fuel cache. Full gate pass: 87/140 vs tb_merge_b, gauntlet 174/200 (`results/experiments/2026-11-01-q24_combo.md`) | 1 Nov 01:24 UTC |
-| v4 | **c2_respawn** | q24_combo + respawn-rule freeze fix. Full gate pass: 89/140 vs q24_combo, gauntlet 177/200, 98/140 vs tb_merge_b (`results/experiments/2026-11-01-c2_respawn.md`) | 1 Nov 04:36 UTC |
+| v3 | **q24_combo** | tb_merge_b + lock memory, gold tiebreak, group fights, fuel cache. Full gate pass: 87/140 vs tb_merge_b, gauntlet 174/200 (`results/simulated-matches/2026-11-01_0126_q24_combo/notes.md`) | 1 Nov 01:24 UTC |
+| v4 | **c2_respawn** | q24_combo + respawn-rule freeze fix. Full gate pass: 89/140 vs q24_combo, gauntlet 177/200, 98/140 vs tb_merge_b (`results/simulated-matches/2026-11-01_0437_c2_respawn/notes.md`) | 1 Nov 04:36 UTC |
 
 `sf_bank` was bundled as an interim upgrade but never uploaded: browser access to the site dropped for a while, and the merge finished first. Zips are in `submissions/` (gitignored).
 
@@ -91,7 +91,7 @@ Round-robin among the merges (`results/roundrobin-merges-2026-10-31.txt`): **tb_
 
 ## 5. Known weaknesses and next steps (prioritised)
 **Superseded:** the live queue and verdicts are in `results/STRATEGIES.md`, and the immediate resume list is in `results/STATUS.md`. In short:
-1. **Q24 combined candidate:** the lock-memory bug fix + gold-tiebreak play + early-fight rule + fuel caching from strategy batch 1 (`results/experiments/2026-10-31-batch1-interim.md`). Build it, analyse it, gate it.
+1. **Q24 combined candidate:** the lock-memory bug fix + gold-tiebreak play + early-fight rule + fuel caching from strategy batch 1 (`results/simulated-matches/2026-11-01_0017_batch1-interim/notes.md`). Build it, analyse it, gate it.
 2. **Learn from the real ladder (Q14, Q19):** download our losses (`cambc matches summary/download`), run `tools/analyze_match.py` on them, and find how the mirror-meta teams out-play us.
 3. **Map structure (Q20-Q22):** teleport into wolf-ringed altars, fix the respawn-rule freeze, rush open gates.
 4. **Fuel (Q25)** and the **C++ track** (`bots/cpp_port`, at parity, 0 exhaustions).

@@ -19,7 +19,7 @@ STRATEGIES Q27 refined (Q27b, Q27c). Stages (LOOP.md 3a-d): implement, targeted 
     - The fix: put a gold floor on the bonus, or leave it out if it does not help.
   - h_treasure's far-altar banking (C) and the delivery term are **not** ported. C was implicated in the 01shortcut deaths; delivery was already dropped.
 - **Source:**
-  - `results/experiments/2026-11-01-h_treasure.md` (72W-68L vs tb_merge_b, inconclusive).
+  - `results/simulated-matches/2026-11-01_0153_h_treasure/notes.md` (72W-68L vs tb_merge_b, inconclusive).
   - **Ladder ground truth** (`results/ladder-games.jsonl`). The live bots are **2W-6L on 02treasure_box**:
     - v2 is 2-3;
     - v3 (= q24_combo) is 0-3: 19-1015, 588-734 and 0-1002.

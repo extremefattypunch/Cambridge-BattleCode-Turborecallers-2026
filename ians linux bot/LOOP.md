@@ -9,7 +9,7 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
 
 **Work that was running on the dev PC when it stopped** (all must be restarted by the cluster agent; nothing runs by itself):
 - the scheduled tick (this file);
-- strategy experiments with analysis sessions (batch 1 interrupted; see `results/experiments/2026-10-31-batch1-interim.md`);
+- strategy experiments with analysis sessions (batch 1 interrupted; see `results/simulated-matches/2026-11-01_0017_batch1-interim/notes.md`);
 - the promotion gate for the best candidates (gate round 1 interrupted; nothing gated);
 - ladder tracking (needs `cambc login` on a CLI-only machine);
 - postmortem and ladder research (`postmortems/INSIGHTS.md`; Q14/Q19 replay studies pending);
@@ -44,12 +44,15 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
    - Pull each new set with `python3.12 tools/ladder_pull.py`.
    - **This is the top priority each tick.** `python3.12 tools/unscouted.py` lists the sets without a note, newest first. Run them through `tools/workflows/ladder_scout.js` (`Workflow({scriptPath: ".../ians linux bot/tools/workflows/ladder_scout.js", args: <that JSON>})`).
    - Self-play experiments (step 3) keep running alongside at lower priority; the user wants both.
-   - For each new set, write a scouting report to `results/ladder/scouting/<date>-<group8>-<opponent>.md` using `tools/scout.py` (profiles both teams: build order, farming and tempo, tributes, fights, map control) and `tools/analyze_match.py`. Cover:
-     - the opponent's game plan;
-     - the decisive moments of each game, with round numbers;
-     - their strategy vs ours, and the responsible code in our bot;
-     - our weaknesses, and testable hypotheses.
-   - With each batch of notes, update the readable synthesis `results/ladder/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`) and the ranked weakness ledger `results/ladder/WEAKNESSES.md`, and feed their top items into STRATEGIES.md.
+   - **One folder per real match:** `results/real-matches/<YYYY-MM-DD>_<HHMM UTC>_<opponent>_<group8>/notes.md`. That is the 5 games against one team in one match group. Use `results/real-matches/TEMPLATE.md`, in the user's order:
+     1. the games played, briefly, against this exact team;
+     2. their strategy compared with ours;
+     3. which strategy was superior given the results, and what we learn;
+     4. the weaknesses exposed, with the responsible code and testable hypotheses.
+
+     Tools: `tools/scout.py` profiles both teams; `tools/analyze_match.py` narrates a game.
+   - With each batch of notes, rewrite (do not append to) the short, readable synthesis `results/real-matches/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`) and the ranked ledger `results/real-matches/WEAKNESSES.md`. Feed their top items into STRATEGIES.md.
+   - `python3.12 tools/organize_notes.py` rebuilds `results/real-matches/INDEX.md` and `results/simulated-matches/INDEX.md`, and moves any note left in an old location.
    - The full replay zip (`cambc matches download <id>`) adds our bot's stdout and per-turn fuel trace when decisions need explaining.
 3. **Strategy experiments: hypothesis → test → detailed analysis → new hypotheses.** This is the core learning process. If fewer than about 2 experiment workflows are running, take the top untested items from the STRATEGIES.md queue and launch a workflow in which every strategy goes through all four stages:
    - **(a) Implement** the strategy in its own candidate bot (`tools/newbot.py <champion> <cand>`; never edit the champion).
@@ -59,13 +62,12 @@ Something must trigger one **tick** about every 30 min. On the dev PC this was a
      - Read full per-game narratives (`tools/analyze_match.py matches/<tag>/<map>__A.json`) for every loss and any surprising win: deaths with killer and location, per-champion lines, tribute habits.
      - Read bot stdout from the kept replay zips (`team-a.stdout`) when decisions need explaining.
      - Answer: did the mechanism we targeted actually change, and why did the remaining losses happen?
-   - **(d) Write** `results/experiments/<YYYY-MM-DD>-<cand>.md` from the template, covering:
-     - the hypothesis and its source;
-     - the setup;
-     - the eval lines;
-     - the analysis findings, with evidence;
-     - the verdict (kept / rejected / inconclusive);
-     - the **new hypotheses** the analysis suggests.
+   - **(d) Write one folder per simulated match:** `results/simulated-matches/<YYYY-MM-DD>_<HHMM UTC>_<cand>/notes.md`. Use `results/simulated-matches/TEMPLATE.md`, in the user's order:
+     1. **The previous simulated match, analysed**, in the same format as a real-match note. This is the most recent finished simulated match this hypothesis builds on, usually the champion's own gate match or the experiment being refined.
+     2. **The new hypothesis**: the change; why it should win; the evidence that it has promise, linking the real-match notes and earlier simulated-match notes that motivated it; the prediction.
+     3. **The test**: setup, commands, verbatim SUMMARY/GAUNTLET lines.
+     4. **This match, analysed**, in the same format: games, strategies compared, which was superior, whether the targeted mechanism changed, and why the remaining games were lost.
+     5. **Verdict and new hypotheses** (kept / rejected / inconclusive / promoted, with gate numbers).
 
      Then add those hypotheses to the STRATEGIES.md queue, record the verdict there, and never re-run a rejected idea unchanged. Combine compatible winners in a follow-up merge experiment.
 

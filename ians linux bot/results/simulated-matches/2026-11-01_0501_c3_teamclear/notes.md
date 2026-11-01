@@ -28,7 +28,7 @@ STRATEGIES **Q26 merge** (h_teamclear's team bootstrap ported onto the Q24 combo
   - Integration with q24's chip mode as described in `bots/c3_teamclear/NOTES.md` (T1-T6).
   - h_teamclear scored 91/140 vs tb_merge_b. The question is whether the bootstrap still adds a decisive gain on top of q24 (87/140 vs tb_merge_b).
 - **Source:**
-  - `results/experiments/2026-11-01-h_teamclear.md`, whose recommended next step was "merge Q26 into the Q24/Q21 combo";
+  - `results/simulated-matches/2026-11-01_0153_h_teamclear/notes.md`, whose recommended next step was "merge Q26 into the Q24/Q21 combo";
   - real ladder losses on 02gift_wrapping: 0-1028 and 16-1006 with 0 team-group clears;
   - the c3 smoke run: 24/30 vs tb_merge_b on the 15 most-affected maps.
 

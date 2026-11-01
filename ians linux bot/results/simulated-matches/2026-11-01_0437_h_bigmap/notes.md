@@ -73,7 +73,7 @@ Every job exited 0, with 0 missing games.
 **Gate (a): FAIL.**
 - 80/140 against the required 82. Wilson 95% interval [0.4886, 0.6504]. botFaults 0.
 - Side split: A 40/70, B 40/70. Map pairs: WW 20, LL 10, WL 20, LW 20.
-- For scale: the null-change placebos against q24_combo scored 66 and 68, and the mirror 70 (`results/experiments/2026-11-01-placebo.md`; single-run SD ≈ 5). So 80 is about +2 SD over a null, but below the gate.
+- For scale: the null-change placebos against q24_combo scored 66 and 68, and the mirror 70 (`results/simulated-matches/2026-11-01_0437_placebo/notes.md`; single-run SD ≈ 5). So 80 is about +2 SD over a null, but below the gate.
 
 Gates (b) gauntlet and (c) release game were **not run**, because gate (a) already fails and LOOP.md forbids simulating for its own sake. The fuel part of (c) can be read from the gate games: fuelExhausted 7.7 per game against q24's 7.5 in the same 140 games.
 
@@ -179,7 +179,7 @@ I traced the same-target cycle on 02tangle B r62-77 with `dbg_q30bank` (`matches
 - **Even rounds:** play_turn returns before the farming goals. This is consistent with the "never block a camp's respawn" push-off toward `G.center` by Chebyshev distance.
 - **The bank decision** was `go=False` with det = 24 throughout, so banking is ruled out.
 - **Duration.** In q24 this cycle ran from r63 to r122 (60 rounds, two champions). The guard committed at r69 and banned g24 at r77.
-- **Root cause.** This is h_respawnfix's mechanism 1 (`results/experiments/2026-11-01-h_respawnfix.md`), which `c2_respawn` fixes at the root. h_bigmap only bans the target.
+- **Root cause.** This is h_respawnfix's mechanism 1 (`results/simulated-matches/2026-11-01_0126_h_respawnfix/notes.md`), which `c2_respawn` fixes at the root. h_bigmap only bans the target.
 - **The 00galaxy A residual.** The 169 two-target turns there in v1 and v2 are a target-independent movement cycle: slot 4 at (28,15)/(29,14), r975-1024. The guard committed to g6, banned it, and then the same two tiles repeated with g7 and then g8. Banning targets does not break a cycle that is not caused by the target.
 - **Residual fight standoffs** ("1-target, enemy in view"), for example v1's adgato-gemcombat5 A slot 1:
   - Vendetta at full HP dances (77,79)/(76,79) for 633 rounds against a lone enemy at distance 3-5 with 1,200 HP;

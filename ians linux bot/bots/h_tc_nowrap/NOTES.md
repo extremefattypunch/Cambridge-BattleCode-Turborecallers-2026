@@ -1,7 +1,7 @@
 # h_teamclear: team bootstrap for camp groups no champion can clear alone (STRATEGIES Q26)
 
 Forked from `tb_merge_b` with `tools/newbot.py`. Only `src/bot.py` differs (all changes tagged `h_teamclear`);
-draft.py, main.py and randomness.py are byte-identical. Report: `results/experiments/2026-11-01-h_teamclear.md`.
+draft.py, main.py and randomness.py are byte-identical. Report: `results/simulated-matches/2026-11-01_0153_h_teamclear/notes.md`.
 
 | Flag | Default | What it does |
 |---|---|---|

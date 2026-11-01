@@ -18,7 +18,7 @@ STRATEGIES **Q24**: the combined candidate. This report covers the full promotio
   4. **Fuel caching** (h_fightfuel). Bitboard `observe`, awake-only `threats` with a per-turn enemy cache, `retreat_fast` and `kit_units_fast`.
   - **Integration (new):** `TRIBUTE_USABLE_ONLY`. It is a no-op on all 70 local maps. Merge details are in `bots/q24_combo/NOTES.md`.
 - **Expected effect:** the four gains should mostly add up, because they live in different subsystems. The single-patch totals were +5, +4, +14 and +2 over the 70/140 mirror baseline.
-- **Source:** batch-1 reports `2026-11-01-h_3pick.md`, `-h_goldtie.md`, `-h_earlyfight_all.md`, `-h_fightfuel.md` and `2026-10-31-batch1-interim.md`.
+- **Source:** batch-1 reports `results/simulated-matches/2026-11-01_0126_h_3pick/notes.md`, `-h_goldtie.md`, `-h_earlyfight_all.md`, `-h_fightfuel.md` and `results/simulated-matches/2026-11-01_0017_batch1-interim/notes.md`.
 
 ## Setup
 - **Candidate:** `bots/q24_combo`, forked from `tb_merge_b` with `tools/newbot.py`. Only `src/bot.py` and `src/main.py` differ, and the diagnostics are off: `DIAG`, `PROF`, `VALIDATE` and `GOLD_LOG` are all False.

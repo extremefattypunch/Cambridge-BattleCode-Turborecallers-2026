@@ -1,7 +1,7 @@
 # h_respawnfix: universal respawn-rule movement fix (STRATEGIES Q21)
 
 Base: `bots/tb_merge_b` (champion), same draft. Only `src/bot.py` changed; every change is tagged
-`h_respawnfix` and switched by `RESPAWN_FIX = True`. Report: `results/experiments/2026-11-01-h_respawnfix.md`.
+`h_respawnfix` and switched by `RESPAWN_FIX = True`. Report: `results/simulated-matches/2026-11-01_0126_h_respawnfix/notes.md`.
 
 ## The engine rule
 "The group respawns together after rewards are claimed ... Any occupied spawn tile delays the entire
@@ -64,4 +64,4 @@ SUMMARY h_respawnfix vs tb_merge_b: 25W-17L (60%)  avg gems 704 vs 599  avg deat
   non-respawning tile 17,059 times in 135/140 games, and the fresh-Alive "unseen" guess 12,486 times in 38 games.
 - Freeze metric (idle >= 150 rounds, excluding 4 structural 0-0 maps): 4.7% of champion-time vs 5.2% for
   tb_merge_b in the same games and 8.4-9.3% in the tb_merge_b mirror. 01yellow-brick-road: ~8,500 -> 286.
-- Full analysis: `results/experiments/2026-11-01-h_respawnfix.md`.
+- Full analysis: `results/simulated-matches/2026-11-01_0126_h_respawnfix/notes.md`.

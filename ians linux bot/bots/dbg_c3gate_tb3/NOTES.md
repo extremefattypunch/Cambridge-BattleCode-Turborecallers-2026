@@ -2,7 +2,7 @@
 
 **Lineage.** `bots/c3_teamclear` is a fresh fork of the champion `q24_combo`, with every hunk of h_teamclear v2 ported onto it.
 - **Source of the port:** `diff -u bots/tb_merge_b/src/bot.py bots/h_teamclear/src/bot.py` (470 lines). h_teamclear changed only `bot.py`; its main.py, draft.py and randomness.py are byte-identical to tb_merge_b's.
-- **Why all parts:** the h_teamclear report (`results/experiments/2026-11-01-h_teamclear.md`) ran two ablations.
+- **Why all parts:** the h_teamclear report (`results/simulated-matches/2026-11-01_0153_h_teamclear/notes.md`) ran two ablations.
   - With the wrap fix alone, h_tc_wraponly scored 82/140.
   - With team clear but no wrap fix, h_tc_nowrap scored 64/140.
   - So every part ships, with h_teamclear's exact flag values.

@@ -2,7 +2,7 @@
 
 - **Last update:** 2026-11-01 01:50 EDT (tick). The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `c2_respawn` (q24_combo + respawn fix), website **v4**, **live since ~04:40 UTC on 1 Nov** after a full gate pass plus a skeptic pass (`results/READY.md`).
-- **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/experiments/2026-11-01-v3-ladder-study.md`) found:
+- **Ladder (pulled 1 Nov 04:35 UTC):** corrected labels give **v3 45W-45L** (~1,530) and **v2 74W-36L**. The v3 ladder study (`results/real-matches/studies/2026-11-01_0437_v3-ladder-study/notes.md`) found:
   - 25 games had been mislabelled; `tools/ladder_pull.py` now re-derives versions by finish time.
   - Rating-controlled, v3 vs v2 is −54 Elo [−166, +65], p 0.36, so not significant. v3 held v2's rating.
   - Fuel caching, gold play and lock memory are confirmed working on real games.
@@ -33,6 +33,14 @@ The session-only cron tick and any running workflows die whenever the Claude pro
   2. Check `squeue -u $USER -p test` and `results/experiments/` for the work the interrupted workflows finished.
   3. Relaunch what is missing.
 - **Login-node rules:** run no games locally, not even a single debug game; send them through `tools/onslurm.sh -c 2 -m 2G -t 00:05:00 -J dbg -- ./cli/cambc run ...`. Long analysis scripts also go through onslurm.
+
+## Note layout (user, 1 Nov ~06:00 UTC)
+- **One folder per match, each with its own `notes.md`.**
+  - Real matches: `results/real-matches/<date>_<HHMM>_<opponent>_<group8>/`.
+  - Simulated matches: `results/simulated-matches/<date>_<HHMM>_<candidate>/`.
+- The formats are in each folder's `TEMPLATE.md`; the workflow, with flowcharts, is in the repo `README.md`.
+- `tools/organize_notes.py` moves notes left in old places (`results/experiments/`, `results/ladder/scouting/`) and rebuilds both `INDEX.md` files. Run it after any workflow finishes.
+- Untracked compatibility symlinks in `results/experiments/` (and `TEMPLATE.md` there) exist only for workflows started before the move. Delete them once batch 6, batch 7 and both scouting workflows have finished.
 
 ## In progress
 - **Workflow `battlecode-ladder-scouting`** (launched ~01:40 EDT): deep scouting of all 24 v3/v4 ladder sets. It builds `tools/scout.py`, writes per-set notes in `results/ladder/scouting/` and a ranked `results/ladder/WEAKNESSES.md`. From now on every new set is scouted each tick into `results/ladder/INSIGHTS.md` (user, 1 Nov: real-match insights first, self-play continues).

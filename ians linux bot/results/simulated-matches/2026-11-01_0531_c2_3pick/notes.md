@@ -20,7 +20,7 @@ Workflow batch 5 item **c2_3pick** (STRATEGIES queue line "c2 3-pick mirror-draf
   - Against tb_merge_a: 1/8 against 4/8 on the sprint 3-pick map-sides.
   - The c2 gate report's H1 suspected `leave_respawn_tile` (end-of-turn step-off, quiet turns only) of deadlocking or walking champions into fights when an enemy is near.
   - The skeptic proposed either "step-off only off-fight" or q24's behaviour for 3-pick drafts, keyed on team size and not on map names.
-- **Source:** the c2 skeptic pass (`results/experiments/2026-11-01-c2_respawn.md`, H1; STRATEGIES queue). Matches `matches/skc2-vs-tbm-all` (c2 vs tb_merge_b) and `matches/gate-q24-all`, `plc-b-vs-tbm` and `plc2-a-tbm` (q24 and two fuel placebos of it vs tb_merge_b).
+- **Source:** the c2 skeptic pass (`results/simulated-matches/2026-11-01_0437_c2_respawn/notes.md`, H1; STRATEGIES queue). Matches `matches/skc2-vs-tbm-all` (c2 vs tb_merge_b) and `matches/gate-q24-all`, `plc-b-vs-tbm` and `plc2-a-tbm` (q24 and two fuel placebos of it vs tb_merge_b).
   - All three q24-family runs give 19/24, game for game, on the 3-pick map-sides.
 
 The 12 three-pick maps (`len(champions) == 6` in the stats JSON) are 00anvil, 00breadcrumbs, 00collision, 00fragment, 00packs, 01broken-curve, 01gold-rush, 01the-farm, 02arena, 02the-pack, 02the-pond and adgato-gemcombat1. Both tb_merge bots and we draft Vesper Vale, Vendetta and Marcella there (mirror draft).

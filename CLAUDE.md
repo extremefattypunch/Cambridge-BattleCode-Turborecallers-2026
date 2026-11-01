@@ -22,11 +22,23 @@ Team repo for Cambridge Battlecode 2026a ("cambc", https://2026a.battlecode.co.u
   - leaderboard and ladder-match monitoring;
   - submissions for every tournament and qualifier.
 - **Every simulated match must test a new, meaningful, distinct strategy hypothesis.** Hypotheses come from our real ladder games, our own bots, or postmortems. **Never simulate for its own sake** (no idle soak runs).
-- **Every experiment ends in a detailed analysis session.** Use `tools/analyze_match.py` to cover the gem race, opening tempo, deaths with killers, per-champion lines, and replay stdout. Write a report in `results/experiments/`, and feed new hypotheses back into STRATEGIES.md. The user calls this "the critical learning process".
+- **Every experiment ends in a detailed analysis session.** Use `tools/analyze_match.py` to cover the gem race, opening tempo, deaths with killers, per-champion lines, and replay stdout. Write one folder per simulated match, `results/simulated-matches/<date>_<HHMM>_<cand>/notes.md`, following its `TEMPLATE.md`:
+  1. the previous simulated match analysed, in the same format as a real-match note;
+  2. the new hypothesis and the evidence (real and simulated) that it has promise;
+  3. the test;
+  4. this match analysed;
+  5. the verdict.
+
+  Feed new hypotheses back into STRATEGIES.md. The user calls this "the critical learning process".
 - **Analyse every real ladder match carefully, from now on** (user, 1 Nov). Real-match insights are worth more than self-play.
   - Catch up on the most recent sets first, then keep up with each new one.
-  - For each set write a note in `results/ladder/scouting/` covering the opponent's strategy, the decisive moments, how their play was superior or inferior to ours, and our weaknesses.
-  - Fold the notes into `results/ladder/INSIGHTS.md`, laid out like `postmortems/INSIGHTS.md`, so the user can read the insights.
+  - Write one folder per real match (the 5 games vs one team): `results/real-matches/<date>_<HHMM>_<opponent>_<group8>/notes.md`. Follow its `TEMPLATE.md`:
+    1. the games played;
+    2. their strategy vs ours;
+    3. which strategy was superior and what we learn;
+    4. our weaknesses and hypotheses.
+  - Fold the notes into the short, rewritten-not-appended `results/real-matches/INSIGHTS.md` (laid out like `postmortems/INSIGHTS.md`) and `WEAKNESSES.md`.
+  - The workflow, with flowcharts, is in the repo README; keep the README in sync when the process changes (user, 1 Nov).
   - Prioritise hypotheses from these insights.
   - **Keep learning from simulated matches too.** Self-play experiments, their analysis sessions and the gate continue alongside. The user only asked to prioritise real matches, not to drop self-play (1 Nov).
 - **Always keep a ready-to-submit best bot:** `results/CHAMPION`, `submissions/READY.zip` and `results/READY.md`.
@@ -56,7 +68,9 @@ Team repo for Cambridge Battlecode 2026a ("cambc", https://2026a.battlecode.co.u
 | `tools/ladder_log.py [files]` | Append real ladder games to `results/ladder-games.jsonl` and summarise the record |
 | `tools/soak.py` | Random-map soak runs. Only for testing a specific hypothesis, never as an idle loop |
 | `postmortems/match_metrics.py matches/<tag>` | Tribute sizes, deaths and gem loss by killer, fuel exhaustion, wards |
-| `results/` | STATUS, STRATEGIES, READY, CHAMPION, experiments/, ladder logs, round-robin results |
+| `results/` | STATUS, STRATEGIES, READY, CHAMPION, the ladder logs (`ladder-games.jsonl`, `ladder-versions.json`) and gauntlet results |
+| `results/real-matches/` | One folder per real ladder match (`notes.md`), plus `INSIGHTS.md`, `WEAKNESSES.md`, `INDEX.md`, `TEMPLATE.md` and `studies/` |
+| `results/simulated-matches/` | One folder per simulated match (`notes.md`), plus `INDEX.md` and `TEMPLATE.md`. `tools/organize_notes.py` keeps both trees and their indexes tidy |
 | `docs/` | Official GameRules.md, BotAPI*.md, handbook guides, `CLI_ONLY.md` (site tasks without a browser), `claude-settings.example.json` (optional permission allowlist for an unattended agent) |
 | `maps/` | Local map pool (70 maps). Sprints use **unseen** maps, so never special-case map names |
 | `cli/cambc` | CLI binary, **gitignored** (99 MB). See Setup |

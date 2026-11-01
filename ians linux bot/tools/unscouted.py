@@ -5,8 +5,9 @@ tools/workflows/ladder_scout.js.
 Usage:
     python3 tools/unscouted.py [--since ISO-TIME] [--limit N]
 
-A set is scouted when results/ladder/scouting/ holds a note whose name contains the first 8 characters
-of its group id. Only sets whose 5 games are all finished and logged are listed.
+A set is scouted when it has a folder results/real-matches/<date>_<HHMM>_<opponent>_<group8>/ with a
+notes.md (or, from before the 1 Nov reorganisation, a results/ladder/scouting/<date>-<group8>-*.md note,
+which tools/organize_notes.py then moves). Only sets whose 5 games are all finished and logged are listed.
 """
 import argparse
 import collections
@@ -15,7 +16,8 @@ import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, "results", "ladder-games.jsonl")
-NOTES = os.path.join(ROOT, "results", "ladder", "scouting")
+REAL = os.path.join(ROOT, "results", "real-matches")
+LEGACY = os.path.join(ROOT, "results", "ladder", "scouting")
 
 
 def main():
@@ -23,7 +25,11 @@ def main():
     ap.add_argument("--since", default="2026-10-31T23:45", help="only sets that finished after this (UTC)")
     ap.add_argument("--limit", type=int, default=6)
     args = ap.parse_args()
-    done = {f.split("-")[3] for f in os.listdir(NOTES) if f.endswith(".md")} if os.path.isdir(NOTES) else set()
+    done = set()
+    if os.path.isdir(REAL):
+        done |= {d.rsplit("_", 1)[-1] for d in os.listdir(REAL) if os.path.isfile(os.path.join(REAL, d, "notes.md"))}
+    if os.path.isdir(LEGACY):
+        done |= {f.split("-")[3] for f in os.listdir(LEGACY) if f.endswith(".md")}
     sets = collections.defaultdict(list)
     for line in open(LOG):
         if line.strip():

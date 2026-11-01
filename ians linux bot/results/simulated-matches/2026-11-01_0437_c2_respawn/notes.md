@@ -21,7 +21,7 @@ STRATEGIES **Q21 on the new champion**: q24_combo plus h_respawnfix v3 (the resp
   - The h_respawnfix census measured it on tb_merge_b: the push-back fired on non-respawning tiles 17,059 times in 135/140 games, and the unseen-alive guess fired with a fresh Alive state 12,486 times.
   - h_respawnfix alone scored 92/140 against tb_merge_b, the best single patch of batch 1.
   - The expected result is fewer frozen champion-rounds and more clears/tributes.
-- **Source:** `results/experiments/2026-11-01-h_respawnfix.md`, `bots/h_respawnfix/NOTES.md`, `bots/c2_respawn/NOTES.md` (merge resolutions R1-R5, local validation on 01yellow-brick-road).
+- **Source:** `results/simulated-matches/2026-11-01_0126_h_respawnfix/notes.md`, `bots/h_respawnfix/NOTES.md`, `bots/c2_respawn/NOTES.md` (merge resolutions R1-R5, local validation on 01yellow-brick-road).
 
 ## Setup
 - **Candidate:** `bots/c2_respawn`, forked from `q24_combo` with `tools/newbot.py`.

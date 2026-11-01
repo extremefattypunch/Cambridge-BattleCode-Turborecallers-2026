@@ -14,7 +14,7 @@ The synthesis pass also checked the key facts again (see "Checked in this pass")
 - **Confidence: medium.**
 
 ## Hypothesis
-- **What:** v3 (`bots/q24_combo`, live from 01:42:13 UTC) plays worse on the real ladder than v2 (`bots/tb_merge_b`, live 21:53-01:42 UTC), even though the local gate went the other way (87/140 against tb_merge_b, gauntlet 174 vs 158; `2026-11-01-q24_combo.md`). If so, which of the four q24 patches is responsible?
+- **What:** v3 (`bots/q24_combo`, live from 01:42:13 UTC) plays worse on the real ladder than v2 (`bots/tb_merge_b`, live 21:53-01:42 UTC), even though the local gate went the other way (87/140 against tb_merge_b, gauntlet 174 vs 158; `results/simulated-matches/2026-11-01_0126_q24_combo/notes.md`). If so, which of the four q24 patches is responsible?
   1. Lock-memory fix.
   2. Gold-tiebreak play.
   3. The all-game group-balance fight rule.

@@ -7,7 +7,7 @@ V3L-2, "the 01shortcut stuck champion". The root cause was found by trace and fi
 - **What.** A champion idles with 0 gems for 1,300-1,700 rounds on 01shortcut, which costs 25% of a 4-pick team.
   Find why, and fix it generally (no map names; qualifiers use unseen maps).
 - **Source.**
-  - `results/experiments/2026-11-01-v3-ladder-study.md` (V3L-2) and STRATEGIES V3L-2.
+  - `results/real-matches/studies/2026-11-01_0437_v3-ladder-study/notes.md` (V3L-2) and STRATEGIES V3L-2.
   - On the ladder, v3 went 0-3 on 01shortcut: 378-773, 476-531, 714-1015 vs Spawn Campers (v2 had won 1168-441 there). Since then v3 also won e701a61e, so it is 1-3.
   - Ladder stats (`tools/freeze_metric.py`):
 

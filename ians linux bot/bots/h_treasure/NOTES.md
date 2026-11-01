@@ -1,6 +1,6 @@
 # h_treasure: Q27 fix for 02treasure_box (fork of tb_merge_b, 1 Nov 2026)
 
-Report: `results/experiments/2026-11-01-h_treasure.md`. Only `src/bot.py` differs from tb_merge_b; every change is
+Report: `results/simulated-matches/2026-11-01_0153_h_treasure/notes.md`. Only `src/bot.py` differs from tb_merge_b; every change is
 tagged `h_treasure` and sits behind a flag at the top of the file.
 - **A, spawn-heal-aware fighting** (`SPAWN_HEAL_AWARE`, `SPAWN_AVOID`, `HEAL_CHASE_GUARD`):
   - no engaging enemies that stand on their own spawn (they heal to full at their turn end) unless we can burst them in one round;

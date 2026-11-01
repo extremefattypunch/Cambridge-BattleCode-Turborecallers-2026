@@ -6,7 +6,7 @@ Q21, universal respawn-rule movement fix. Run on the cluster (Slurm `test` parti
 - **What:** tb_merge_b's "never block a camp's respawn" rule reacts wrongly in general, not only on 01yellow-brick-road. It pushes a champion off *any* camp tile toward its target's centre and ends the turn.
   - By the engine rules, an occupied spawn tile only matters while that group is **Respawning** (GameRules, Camps & capture: "The group respawns together after rewards are claimed ... Any occupied spawn tile delays the entire group").
   - A general fix should remove these freezes on any map with this geometry and turn frozen rounds into clears and tributes.
-- **Source:** the h_goldtie analysis (`bots/h_goldtie/NOTES.md`; `results/experiments/2026-10-31-batch1-interim.md` finding 2). On 01yellow-brick-road all 5 champions froze from r~200 to r2000, with 1 clear per game.
+- **Source:** the h_goldtie analysis (`bots/h_goldtie/NOTES.md`; `results/simulated-matches/2026-11-01_0017_batch1-interim/notes.md` finding 2). On 01yellow-brick-road all 5 champions froze from r~200 to r2000, with 1 clear per game.
 
 ## Setup
 - Candidate: `bots/h_respawnfix`, forked from the champion `tb_merge_b` with `tools/newbot.py`. Only `src/bot.py` changed (79 diff lines, all switched by `RESPAWN_FIX`). Design and iterations are in `bots/h_respawnfix/NOTES.md`.
