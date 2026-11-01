@@ -46,7 +46,8 @@ The session-only cron tick and any running workflows die whenever the Claude pro
 - **Batch 6: c4_fallback failed gate (a), 78/140 vs c2** (LB 0.474). Hedge 99/140 vs tb_merge_b; gauntlet 177 = 177.
   - It fixes 02gift-wrapping (W 1032-0; beats starter-python where c2 loses 0-80), but the fallback fires in only ~10 games.
   - Kept as a component.
-- **Batch 7, h_antifocus kept as a component.** A new imitation `imit_uvt2` reproduces the Us V Them ladder losses: c2 scores 76/140 against it, h_antifocus 105/140 (+37/−8 paired). vs c2 74/140; vs tb_merge_b 104/140. h_snowball is still running.
+- **Batch 7, h_antifocus kept as a component.** A new imitation `imit_uvt2` reproduces the Us V Them ladder losses: c2 scores 76/140 against it, h_antifocus 105/140 (+37/−8 paired). vs c2 74/140; vs tb_merge_b 104/140.
+- **Batch 7, h_snowball kept as a component.** One rule: HP lost with nothing visible means a hidden shooter (usually in a bush), so leave. It scored 75/140 vs c2, 107 vs tb_merge_b (c2: 98), 112 vs tb_merge_a (c2: 90) and 101 vs imit_uvt2 (c2: 76). Both batch-7 experiments independently found the same real weakness: unseen fire from bushes. h_antifocus has its own hidden-hit detector and is in c5. h_snowball's lighter rule is the alternative if c5's fuel cost (h_antifocus roughly doubles fuelExhausted) is a problem.
 - **Workflow `battlecode-batch8-c5`** (launched ~09:40 UTC): **c5_combo** = c2 + 3-pick fix + 01shortcut fix + anti-focus + dormant gift-wrapping fallback.
   - This is the first simulated match in the new note format: sections 1-2 were pre-registered before the test.
   - It runs the full gate (a)-(f) plus per-component attribution and the vs imit_uvt2 check.
