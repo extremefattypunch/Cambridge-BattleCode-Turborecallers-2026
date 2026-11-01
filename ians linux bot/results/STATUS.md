@@ -1,9 +1,9 @@
 # Loop status (updated every tick)
 
-- **Last update:** 2026-10-31 21:30 EDT: **q24_combo promoted and uploaded (website v3)**. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
+- **Last update:** 2026-10-31 21:35 EDT (tick). v3 was still `queued` (verification pending) at 01:31 UTC; v2 is live until it activates. The **cluster agent** (FASRC Cannon) has taken over from the dev PC. A session cron tick fires at :17 and :47 each hour while the session is alive.
 - **Champion / live bot:** `q24_combo` (Python), uploaded as website **v3** at 01:24 UTC on 1 Nov after a full gate pass (87/140 vs tb_merge_b, gauntlet 174 vs 158; `results/READY.md`). Confirm v3 shows Active / Verified on the next ladder pull. The previous bot `tb_merge_b` (v2) was our Sprint 3 entry.
-- **Ladder (pulled 1 Nov ~01:10 UTC via `python3.12 tools/ladder_pull.py`):** v2 is **62W-33L** (65%), rating **1,501** after the 01:00 UTC set. The latest 35 games went 19-16. 02treasure_box was lost a **third** time (138-1005 vs EXP'D), and 00quadrants again by 26 gems (Q27, Q28).
-  - By team size: 3-pick 11/17, 4-pick 17/21, 5-pick 31/52.
+- **Ladder (pulled 1 Nov 01:31 UTC via `python3.12 tools/ladder_pull.py`):** v2 is **74W-36L** (67%), rating **1,530** (up from 1,497; the last 15 games went 12-3). Games are attributed to versions by activation time (`results/ladder-versions.json`), because uploads stay `queued` until verified.
+  - By team size: 3-pick 13/19, 4-pick 23/28, 5-pick 38/63.
   - New loss patterns: **02gift_wrapping** (0 clears all game, lost 0-1028 and 16-1006: Q26); **02treasure_box** (0 tributes, lost 0-1002 and 163-1005: Q27); **7 close races** where the opponent hit ~1000 first (Q28); 0-0 gold tiebreaks on 01boss_battle and 02guardians (h_goldtie's target).
   - CLI login done 1 Nov ~01:00 UTC; it **expires ~7 Nov**. Ladder statistics are in `matches/ladder/summary/<id>__<our side>.json` (feed `tools/analyze_match.py` directly).
 - **Upcoming locks:** International qualifiers 4 Nov, UK qualifiers 11 Nov, finals 18 Nov. Still not listed in `/api/v1/tournaments` at 01:02 UTC on 1 Nov (Sprint 3 is now `ready`). Recheck each tick.

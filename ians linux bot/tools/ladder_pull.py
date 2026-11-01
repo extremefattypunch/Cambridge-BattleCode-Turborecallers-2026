@@ -11,6 +11,9 @@ Needs a `cambc login` session. For every finished ranked game not yet in results
   `cambc submissions list` = the newest upload created before the game).
 Ratings come from `cambc ladder` at pull time, so `opp_rating` is the opponent's CURRENT rating and
 `our_rating_after` is our current rating (exact only for the newest set). Then prints ladder_log.py's summary.
+Games carry no submission id, and an upload stays `queued` until verified, so the bot version of a game is
+the newest version whose ACTIVATION time is before it. Activation times live in results/ladder-versions.json;
+a version is recorded the first time a pull sees it active, using its `statusAt` (when it became active).
 """
 import argparse
 import json
@@ -27,6 +30,7 @@ CAMBC = os.path.join(ROOT, "cli", "cambc")
 if not os.path.exists(CAMBC):
     CAMBC = os.environ.get("CAMBC") or shutil.which("cambc") or CAMBC
 OUT = os.path.join(ROOT, "matches", "ladder", "summary")
+VERSIONS = os.path.join(ROOT, "results", "ladder-versions.json")
 
 
 def cli_json(*args):
@@ -34,6 +38,16 @@ def cli_json(*args):
     if proc.returncode != 0:
         sys.exit(f"cambc {' '.join(args)} failed: {proc.stderr.strip()[-500:]}")
     return json.loads(proc.stdout)
+
+
+def activations(subs):
+    acts = json.load(open(VERSIONS)) if os.path.exists(VERSIONS) else {}
+    for s in subs:
+        if s["active"] and str(s["version"]) not in acts:
+            acts[str(s["version"])] = s["statusAt"]
+            with open(VERSIONS, "w") as f:
+                json.dump(acts, f, indent=1)
+    return acts
 
 
 def ratings():
@@ -68,7 +82,7 @@ def main():
     if not new:
         print("no new ranked games")
     else:
-        subs = cli_json("submissions", "list")["submissions"]
+        acts = activations(cli_json("submissions", "list")["submissions"])
         rating = ratings()
         os.makedirs(OUT, exist_ok=True)
         with open(LOG, "a") as f:
@@ -89,8 +103,8 @@ def main():
                 gems = {t["team"]: int(t["submittedGems"]) for t in st["teams"]}
                 us_team = "team" + side
                 them_team = "teamB" if side == "A" else "teamA"
-                older = [s for s in subs if s["createdAt"] <= m["createdAt"]]
-                version = max(older, key=lambda s: s["createdAt"])["version"] if older else None
+                live = [int(v) for v, t in acts.items() if t <= m["createdAt"]]
+                version = max(live) if live else None
                 row = {"id": m["matchId"], "group": m["groupId"], "time": m["finishedAt"], "v": version,
                        "opp": op["name"], "opp_rating": round(rating.get(op["teamId"], 0)),
                        "our_rating_after": round(rating.get(ME, 0)), "map": m["map"], "side": me["side"],
