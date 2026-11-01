@@ -14,7 +14,7 @@
 #           (detach again with Ctrl-b d; quitting claude only makes the relay restart it)
 #   stop:   scancel -n cambc-agent
 # Env overrides: CLAUDE_SESSION (session id to resume), AGENT_CMD (replaces the claude command, for
-# dry runs), RELAY_SBATCH_ARGS (extra sbatch args for the successor), RELAY_GENERATIONS (stop after N).
+# dry runs), RELAY_NOTE (replaces the hand-off note), RELAY_SBATCH_ARGS (extra sbatch args for the successor), RELAY_GENERATIONS (stop after N).
 
 SESSION=${CLAUDE_SESSION:-5245ba49-8b5b-4d9a-9345-708126bcbea8}
 WORKDIR=/n/home05/ianpoon/Cambridge-BattleCode-Turborecallers-2026
@@ -55,7 +55,7 @@ if [ -n "$PREV" ]; then
 fi
 
 END=$(squeue -h -j "$SLURM_JOB_ID" -o %e)
-NOTE="RELAY (generation $GEN): this session was resumed in Slurm job $SLURM_JOB_ID on $(hostname) (free test partition). This job ends at $END local time; about 40 min before that it queues a successor job, which resumes you when this one ends. Everything session-scoped died with the previous job: the :17/:47 loop-tick cron, running workflows and background commands. Re-create the tick with CronCreate, check results/STATUS.md, the experiment reports and matches/ on disk to see what the interrupted work finished, relaunch what is missing, and start no workflow that cannot finish 30 min before $END."
+NOTE=${RELAY_NOTE:-"RELAY (generation $GEN): this session was resumed in Slurm job $SLURM_JOB_ID on $(hostname) (free test partition). This job ends at $END local time; about 40 min before that it queues a successor job, which resumes you when this one ends. Everything session-scoped died with the previous job: the :17/:47 loop-tick cron, running workflows and background commands. Re-create the tick with CronCreate, check results/STATUS.md, the experiment reports and matches/ on disk to see what the interrupted work finished, relaunch what is missing, and start no workflow that cannot finish 30 min before $END."}
 
 start_agent() {
   tmux kill-session -t "$NAME" 2>/dev/null
